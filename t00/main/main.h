@@ -2,6 +2,8 @@
 #define MAIN_H
 
 #include "oled.h"
+#include <driver/adc.h>
+
 
 typedef struct  s_app
 {

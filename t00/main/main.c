@@ -2,7 +2,11 @@
 
 static TaskHandle_t oled_tsk = NULL;
 static xSemaphoreHandle xMutex;
-//static TaskHandle_t photoresistor_tsk = NULL;
+
+static void get_photoresistor_value()
+{
+
+}
 
 
 static void read_photoresistor(void *param)
@@ -12,12 +16,13 @@ static void read_photoresistor(void *param)
     _Bool on = true;
     while(on)
     {
-        if (xSemaphoreTake(xMutex, (TickType_t)0xffffffff) == 1)
+        if (xSemaphoreTake(xMutex, portMAX_DELAY) == 1)
         {
             if (oled_tsk != NULL)
             {
-                xTaskNotify(oled_tsk, res, eSetValueWithOverwrite);
-                res++;
+                int val = adc1_get_raw(ADC1_CHANNEL_0);
+                xTaskNotify(oled_tsk, val, eSetValueWithOverwrite);
+//                res++;
             }
             xSemaphoreGive(xMutex);
         }
@@ -32,7 +37,7 @@ static void oled_brightness(void *param)
     _Bool on = true;
     while(on)
     {
-        if (xSemaphoreTake(xMutex, (TickType_t)0xffffffff) == 1)
+        if (xSemaphoreTake(xMutex, portMAX_DELAY) == 1)
         {
             if(xTaskNotifyWait(0, 0, &res, portMAX_DELAY) == pdTRUE)
             {
@@ -51,6 +56,8 @@ static void init_app(t_app *app)
     init_oled(&app->oled);
     memset(&app->oled.pixels, 255, sizeof(app->oled.pixels));
     display_pixels(&app->oled);
+    ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_12));//36 gpio get_raw
+    adc1_config_channel_atten(ADC1_CHANNEL_0,ADC_ATTEN_MAX);
 }
 
 void app_main(void)
