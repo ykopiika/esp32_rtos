@@ -3,7 +3,7 @@
 
 #include "oled.h"
 #include <driver/adc.h>
-
+#define MAX_VALUE 4095
 
 typedef struct  s_app
 {

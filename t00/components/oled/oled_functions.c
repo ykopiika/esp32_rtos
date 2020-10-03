@@ -15,7 +15,7 @@ void display_pixels(t_oled *oled)
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     ESP_ERROR_CHECK(i2c_master_start(cmd));
     ESP_ERROR_CHECK(i2c_master_write_byte(cmd,
-                                          (oled->addr << 1) | I2C_MASTER_WRITE, true));
+                           (oled->addr << 1) | I2C_MASTER_WRITE, true));
     ESP_ERROR_CHECK(i2c_master_write_byte(cmd, 0x80, true)); // single command
     ESP_ERROR_CHECK(i2c_master_write_byte(cmd, 0x00, true)); // page number
     ESP_ERROR_CHECK(i2c_master_write_byte(cmd, 0x40, true)); // data stream
