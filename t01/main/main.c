@@ -16,9 +16,11 @@ static void read_from_uart(void *param)
     {
         if(xQueueReceive(uart0_queue, (void * )&event,
                          portMAX_DELAY)) {
-            printf(event.type);
             uart_read_bytes(UART_NUM_1, dtmp, event.size, portMAX_DELAY);
             uart_write_bytes(UART_NUM_1, (const char*) dtmp, event.size);
+            printf("%d| %d,%d,%d,%d,%d,%d,%d\n",event.type, dtmp[0], dtmp[1],
+                   dtmp[2], dtmp[3], dtmp[4], dtmp[5], dtmp[6]);
+            memset(&dtmp, 0, sizeof(dtmp));
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
