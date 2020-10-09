@@ -7,18 +7,27 @@ static void read_from_uart(void *param)
 {
     t_app *a = (t_app*)param;
     uint8_t dtmp[256];
-    memset(&dtmp, 0, sizeof(dtmp));
     uart_event_t event;
     char test_str[30];
     uint32_t res = 0;
     _Bool on = true;
+    int len = 0;
+
+    memset(&dtmp, 0, sizeof(dtmp));
     while(on)
     {
         if(xQueueReceive(uart0_queue, (void * )&event,
                          portMAX_DELAY)) {
-            uart_read_bytes(UART_NUM_1, dtmp, event.size, portMAX_DELAY);
-            uart_write_bytes(UART_NUM_1, (const char*) dtmp, event.size);
-            printf("%d| %d,%d,%d,%d,%d,%d,%d\n",event.type, dtmp[0], dtmp[1],
+            len = uart_read_bytes(UART_NUM_1, dtmp, event.size, portMAX_DELAY);
+            if (len == 1 && isprint(dtmp[0]))
+            {
+                uart_write_bytes(UART_NUM_1, (const char *) dtmp, event.size);
+            }
+            else if(len == 1 && (dtmp[0] == 13))
+            {
+                uart_write_bytes(UART_NUM_1, "\r\n", 2);
+            }
+            printf("%d|%d| %d,%d,%d,%d,%d,%d,%d\n", event.type,event.size, dtmp[0], dtmp[1],
                    dtmp[2], dtmp[3], dtmp[4], dtmp[5], dtmp[6]);
             memset(&dtmp, 0, sizeof(dtmp));
         }
@@ -70,3 +79,4 @@ void app_main(void)
 //            if (uart_write_bytes(UART_NUM_1,
 //                                 (const char *) test_str, strlen(test_str)) == -1)
 //                ESP_ERROR_CHECK(ESP_FAIL);
+//TODO: set protect for all funct
