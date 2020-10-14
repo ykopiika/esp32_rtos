@@ -14,6 +14,7 @@ static void read_from_uart(void *param)
     int len = 0;
 
     memset(&dtmp, 0, sizeof(dtmp));
+    uart_write_bytes(UART_NUM_1, "\r\n$ ", 3);
     while(on)
     {
         if(xQueueReceive(uart0_queue, (void * )&event,
@@ -26,9 +27,10 @@ static void read_from_uart(void *param)
             else if(len == 1 && (dtmp[0] == 13))
             {
                 uart_write_bytes(UART_NUM_1, "\r\n", 2);
+                uart_write_bytes(UART_NUM_1, "$ ", 2);
             }
             printf("%d|%d| %d,%d,%d,%d,%d,%d,%d\n", event.type,event.size, dtmp[0], dtmp[1],
-                   dtmp[2], dtmp[3], dtmp[4], dtmp[5], dtmp[6]);
+                   dtmp[2], dtmp[3], dtmp[4], dtmp[5], dtmp[6]); //todo: clear debug
             memset(&dtmp, 0, sizeof(dtmp));
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);
