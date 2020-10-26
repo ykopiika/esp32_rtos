@@ -19,5 +19,6 @@ typedef struct  s_app
     uart_config_t uart_config;
 }               t_app;
 
+void string_parse(uart_event_t event, uint8_t *dtmp);
 
 #endif
