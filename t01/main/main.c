@@ -17,13 +17,17 @@ static void read_from_uart(void *param)
     uart_write_bytes(UART_NUM_1, "\r\n$ ", 3);
     while(on)
     {
+        printf("  -  \n");
         if(xQueueReceive(uart0_queue, (void * )&event,
-                         portMAX_DELAY) && (event.size <= 10)) {
-            uart_read_bytes(UART_NUM_1, dtmp, event.size, portMAX_DELAY);
-            string_parse(event, dtmp);
-            printf("%d|%d| %d,%d,%d,%d,%d,%d,%d\n", event.type,event.size, dtmp[0], dtmp[1],
-                   dtmp[2], dtmp[3], dtmp[4], dtmp[5], dtmp[6]); //todo: clear debug
-            memset(&dtmp, 0, sizeof(dtmp));
+                         portMAX_DELAY)) {
+            if(event.type == UART_DATA)
+            {
+                uart_read_bytes(UART_NUM_1, dtmp, event.size, 1);
+                string_parse(event, dtmp);
+                printf("%d|%d| %d,%d,%d,%d,%d,%d,%d\n", event.type,event.size, dtmp[0], dtmp[1],
+                       dtmp[2], dtmp[3], dtmp[4], dtmp[5], dtmp[6]); //todo: clear debug
+                memset(&dtmp, 0, sizeof(dtmp));
+            }
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
