@@ -19,6 +19,7 @@ typedef struct  s_app
     uart_config_t uart_config;
 }               t_app;
 
-void string_parse(uart_event_t event, uint8_t *dtmp);
+void string_parse(size_t size, uint8_t *buf);
+void print_new_line(_Bool is_first_line);
 
 #endif

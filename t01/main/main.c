@@ -3,31 +3,41 @@
 static TaskHandle_t uart_tsk = NULL;
 QueueHandle_t uart0_queue = NULL;
 
+void print_new_line(_Bool is_first_line)
+{
+    if (is_first_line)
+        uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
+    else
+    {
+        uart_write_bytes(UART_NUM_1, "\r\n", 2);
+        uart_write_bytes(UART_NUM_1, "$ ", 2);
+    }
+}
+
 static void read_from_uart(void *param)
 {
     t_app *a = (t_app*)param;
-    uint8_t dtmp[256];
+    uint8_t buf[256];
     uart_event_t event;
     char test_str[30];
     uint32_t res = 0;
     _Bool on = true;
     int len = 0;
-
-    memset(&dtmp, 0, sizeof(dtmp));
-    uart_write_bytes(UART_NUM_1, "\r\n$ ", 3);
+    print_new_line(true);
+    memset(&buf, 0, sizeof(buf));
     while(on)
     {
         printf("  -  \n");
-        if(xQueueReceive(uart0_queue, (void * )&event,
+        if(xQueueReceive(uart0_queue, (void *)&event,
                          portMAX_DELAY)) {
-            if(event.type == UART_DATA && event.size == 1)
+            if(event.type == UART_DATA)
             {
-                uart_read_bytes(UART_NUM_1, dtmp, event.size, 1);
-                string_parse(event, dtmp);
+                uart_read_bytes(UART_NUM_1, buf, event.size, 1);
+                string_parse(event.size, buf);
             }
-            printf("%d|%d| %d,%d,%d,%d,%d,%d,%d\n", event.type,event.size, dtmp[0], dtmp[1],
-                   dtmp[2], dtmp[3], dtmp[4], dtmp[5], dtmp[6]); //todo: clear debug
-            memset(&dtmp, 0, sizeof(dtmp));
+            printf("%d|%d| %d,%d,%d,%d,%d,%d,%d\n", event.type, event.size, buf[0], buf[1],
+                   buf[2], buf[3], buf[4], buf[5], buf[6]); //todo: clear debug
+            memset(&buf, 0, sizeof(buf));
             uart_flush(UART_NUM_1);
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);

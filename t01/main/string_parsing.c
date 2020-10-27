@@ -1,14 +1,26 @@
 #include "main.h"
 
-void string_parse(uart_event_t event, uint8_t *dtmp)
+static void print_one_symbol(size_t size, uint8_t *buf)
 {
-    if (isprint(dtmp[0])) //if isprint
+    if (isprint(buf[0])) //if isprint
     {
-        uart_write_bytes(UART_NUM_1, (const char *) dtmp, event.size);
+        uart_write_bytes(UART_NUM_1, (const char *)buf, size);
     }
-    else if(dtmp[0] == 13) //enter
+    else if(buf[0] == 13) //enter
     {
-        uart_write_bytes(UART_NUM_1, "\r\n", 2);
-        uart_write_bytes(UART_NUM_1, "$ ", 2);
+        print_new_line(false);
     }
+}
+
+static void check_line(size_t size, uint8_t *buf)
+{
+    return; //todo make checking logic
+}
+
+void string_parse(size_t size, uint8_t *buf)
+{
+    if (size == 1)
+        print_one_symbol(size, buf);
+    else
+        check_line(size, buf);
 }
