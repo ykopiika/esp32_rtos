@@ -3,41 +3,33 @@
 static TaskHandle_t uart_tsk = NULL;
 QueueHandle_t uart0_queue = NULL;
 
-void print_new_line(_Bool is_first_line)
-{
-    if (is_first_line)
-        uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
-    else
-    {
-        uart_write_bytes(UART_NUM_1, "\r\n", 2);
-        uart_write_bytes(UART_NUM_1, "$ ", 2);
-    }
-}
-
 static void read_from_uart(void *param)
 {
     t_app *a = (t_app*)param;
-    uint8_t buf[256];
-    uart_event_t event;
-    char test_str[30];
-    uint32_t res = 0;
     _Bool on = true;
-    int len = 0;
-    print_new_line(true);
-    memset(&buf, 0, sizeof(buf));
+
+    memset(&a->buf, 0, sizeof(a->buf));
+    memset(&a->line, 0, sizeof(a->line));
+    uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
     while(on)
     {
-        printf("  -  \n");
-        if(xQueueReceive(uart0_queue, (void *)&event,
+        if(xQueueReceive(uart0_queue, (void *)&a->event,
                          portMAX_DELAY)) {
-            if(event.type == UART_DATA)
+            if(a->event.type == UART_DATA && a->event.size < MAX_LEN)
             {
-                uart_read_bytes(UART_NUM_1, buf, event.size, 1);
-                string_parse(event.size, buf);
+                a->buf.len = a->event.size;
+                uart_read_bytes(UART_NUM_1, a->buf.data, a->event.size, 1);
+                if(buffer_parse(&a->buf))
+                    add_buffer_to_line(&a->buf, &a->line); // todo add full line logic
+                else
+                    parse_command(&a->buf, &a->line);
             }
-            printf("%d|%d| %d,%d,%d,%d,%d,%d,%d\n", event.type, event.size, buf[0], buf[1],
-                   buf[2], buf[3], buf[4], buf[5], buf[6]); //todo: clear debug
-            memset(&buf, 0, sizeof(buf));
+            printf(T_YEL"%s\n"R,a->line.data);
+            printf(T_SLV"(%d - %d) "R, a->event.type, a->event.size); //todo: clear debug
+            for (int i = 0; i < 10; ++i)
+                printf(T_PNK"%d "R, a->buf.data[i]);
+            printf("\n"); //todo: clear debug
+            memset(&a->buf, 0, sizeof(a->buf));
             uart_flush(UART_NUM_1);
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);
