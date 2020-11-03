@@ -12,7 +12,7 @@
 
 #define UART_TX_PIN 17
 #define UART_RX_PIN 16
-#define MAX_LEN 200
+#define MAX_LEN 120
 
 #define T_BLK "\x1b[30m" // 30 - text is 	black
 #define T_RED "\x1b[31m" // 31 - text is 	red
@@ -41,7 +41,7 @@ typedef struct  s_buffer
 {
     uint8_t     data[MAX_LEN];
     size_t      len;
-//    size_t      index;
+    size_t      index;
 }               t_buffer;
 
 typedef struct  s_app

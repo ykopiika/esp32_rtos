@@ -10,6 +10,7 @@ void add_buffer_to_line(t_buffer *buf, t_buffer *line)
             line->data[line->len + i] = buf->data[i];
         }
         line->len += buf->len;
+        line->index += buf->len;
         uart_write_bytes(UART_NUM_1, (const char *)buf->data, buf->len);
     }
     //todo: check is full line -> call enter event

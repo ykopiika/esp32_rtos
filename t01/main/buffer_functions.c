@@ -21,4 +21,15 @@ void parse_command(t_buffer *buf, t_buffer *line)
 //                    parse_line(); //todo parse line
 //                    clear_line(); //todo clear line
     }
+    else if(buf->len == 3 && buf->data[0] == 27 && buf->data[1] == 91)
+    {
+        if (buf->data[2] == 65)
+            printf("UP ");
+        else if (buf->data[2] == 66)
+            printf("DOWN ");
+        else if (buf->data[2] == 67)
+            printf("RIGHT ");
+        else if (buf->data[2] == 68)
+            printf("LEFT ");
+    }
 }

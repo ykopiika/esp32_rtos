@@ -7,6 +7,7 @@ static void read_from_uart(void *param)
 {
     t_app *a = (t_app*)param;
     _Bool on = true;
+    void *ptr = (void*)uart0_queue;
 
     memset(&a->buf, 0, sizeof(a->buf));
     memset(&a->line, 0, sizeof(a->line));
@@ -23,8 +24,14 @@ static void read_from_uart(void *param)
                     add_buffer_to_line(&a->buf, &a->line); // todo add full line logic
                 else
                     parse_command(&a->buf, &a->line);
+                if(a->line.index == MAX_LEN - 1)
+                {
+                    char str[] = T_GRN"\r\n\n==>\tline is full\r\n\n$ "R;
+                    uart_write_bytes(UART_NUM_1, str, sizeof(str));
+                    uart_write_bytes(UART_NUM_1, (const char *)a->line.data, a->line.len);
+                }
             }
-            printf(T_YEL"%s\n"R,a->line.data);
+            printf(T_YEL"i:%d len:%d %s\n"R, a->line.index, a->line.len, a->line.data);
             printf(T_SLV"(%d - %d) "R, a->event.type, a->event.size); //todo: clear debug
             for (int i = 0; i < 10; ++i)
                 printf(T_PNK"%d "R, a->buf.data[i]);
