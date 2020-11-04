@@ -7,32 +7,39 @@ static void read_from_uart(void *param)
 {
     t_app *a = (t_app*)param;
     _Bool on = true;
-    void *ptr = (void*)uart0_queue;
+    _Bool is_printed_alarm = false;
 
     memset(&a->buf, 0, sizeof(a->buf));
     memset(&a->line, 0, sizeof(a->line));
     uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
-    while(on)
+    while (on)
     {
-        if(xQueueReceive(uart0_queue, (void *)&a->event,
+        if (xQueueReceive(uart0_queue, (void *)&a->event,
                          portMAX_DELAY)) {
-            if(a->event.type == UART_DATA && a->event.size < MAX_LEN)
+            if (a->event.type == UART_DATA && a->event.size < MAX_LEN)
             {
                 a->buf.len = a->event.size;
                 uart_read_bytes(UART_NUM_1, a->buf.data, a->event.size, 1);
-                if(buffer_parse(&a->buf))
+                if (buffer_parse(&a->buf))
                     add_buffer_to_line(&a->buf, &a->line); // todo add full line logic
                 else
                     parse_command(&a->buf, &a->line);
-                if(a->line.index == MAX_LEN - 1)
+                if (a->line.index == (MAX_LEN - 1) && !is_printed_alarm)
                 {
-                    char str[] = T_GRN"\r\n\n==>\tline is full\r\n\n$ "R;
-                    uart_write_bytes(UART_NUM_1, str, sizeof(str));
-                    uart_write_bytes(UART_NUM_1, (const char *)a->line.data, a->line.len);
+                        is_printed_alarm = true;
+                        char str[] = T_GRN"\r\n\n==>\tline is full\r\n\n$ "R;
+                        uart_write_bytes(UART_NUM_1, str, sizeof(str));
+                        uart_write_bytes(UART_NUM_1, (const char *) a->line.data, a->line.len);
+
                 }
+                else if (is_printed_alarm && a->line.index != (MAX_LEN - 1))
+                    is_printed_alarm = false;
             }
-            printf(T_YEL"i:%d len:%d %s\n"R, a->line.index, a->line.len, a->line.data);
-            printf(T_SLV"(%d - %d) "R, a->event.type, a->event.size); //todo: clear debug
+            printf(T_YEL"buf len:%d\n"R, a->buf.len);
+            printf(T_RED"line i:%d len:%d %s\n"R, a->line.index, a->line.len, (char*)a->line.data);
+//            for (int i = 0; i < 10; ++i)
+//                printf(T_GRN"%d "R, a->line.data[i]);
+            printf(T_YEL"evn t:%d s:%d/ BUF: "R, a->event.type, a->event.size); //todo: clear debug
             for (int i = 0; i < 10; ++i)
                 printf(T_PNK"%d "R, a->buf.data[i]);
             printf("\n"); //todo: clear debug

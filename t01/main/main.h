@@ -43,7 +43,7 @@ typedef struct  s_buffer
     size_t      len;
     size_t      index;
 }               t_buffer;
-
+    
 typedef struct  s_app
 {
     t_buffer buf;
