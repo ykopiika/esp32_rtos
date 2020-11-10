@@ -19,7 +19,7 @@ static void read_from_uart(void *param)
             if (a->event.type == UART_DATA && a->event.size < MAX_LEN)
             {
                 a->buf.len = a->event.size;
-                uart_read_bytes(UART_NUM_1, a->buf.data, a->event.size, 1);
+                uart_read_bytes(UART_NUM_1, a->buf.data, a->event.size, 0);
                 if (buffer_parse(&a->buf))
                     add_buffer_to_line(&a->buf, &a->line); // todo add full line logic
                 else
@@ -30,7 +30,6 @@ static void read_from_uart(void *param)
                         char str[] = T_GRN"\r\n\n==>\tline is full\r\n\n$ "R;
                         uart_write_bytes(UART_NUM_1, str, sizeof(str));
                         uart_write_bytes(UART_NUM_1, (const char *) a->line.data, a->line.len);
-
                 }
                 else if (is_printed_alarm && a->line.index != (MAX_LEN - 1))
                     is_printed_alarm = false;

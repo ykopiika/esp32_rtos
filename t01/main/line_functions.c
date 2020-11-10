@@ -16,10 +16,13 @@ void add_buffer_to_line(t_buffer *buf, t_buffer *line)
         uart_write_bytes(UART_NUM_1, (const char *)buf->data, buf->len);
         if (line->index != line->len)
         {
-            uart_write_bytes(UART_NUM_1, "\e[s", sizeof("\e[s"));
+//            uart_write_bytes(UART_NUM_1, "\e[s", sizeof("\e[s"));
             uart_write_bytes(UART_NUM_1, (const char *)&line->data[line->index + 1],
                              (line->len - line->index));
-            uart_write_bytes(UART_NUM_1, "\e[u", sizeof("\e[u"));
+            for (int i = 0; i < (line->len - line->index); ++i) {
+                uart_write_bytes(UART_NUM_1, "\b", sizeof("\b"));
+            }
+//            uart_write_bytes(UART_NUM_1, "\e[u", sizeof("\e[u"));
         }
         line->len += buf->len;
         line->index += buf->len;
