@@ -78,7 +78,7 @@ void app_main(void)
 
 
     xTaskCreate(read_from_uart, "read_uart",
-                2048, &app, 10, NULL);
+                4096, &app, 10, NULL);
 }
 
 

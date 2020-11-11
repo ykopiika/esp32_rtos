@@ -1,17 +1,6 @@
 #include "main.h"
 
-_Bool buffer_parse(t_buffer *buf)
-{
-    if (!buf)
-        return false;
-    for (int i = 0; i < buf->len; ++i) {
-        if (!isprint(buf->data[i]))
-            return false;
-    }
-    return true;
-}
-
-void arrow_commands(t_buffer *buf, t_buffer *line)
+static void arrow_commands(t_buffer *buf, t_buffer *line)
 {
     if (buf->data[2] == 65)
         printf("UP ");
@@ -38,7 +27,7 @@ void arrow_commands(t_buffer *buf, t_buffer *line)
     }
 }
 
-void backspase_command(t_buffer *line)
+static void backspase_command(t_buffer *line)
 {
     if (line->index > 0) {
         line->index--;
@@ -66,7 +55,7 @@ void backspase_command(t_buffer *line)
     }
 }
 
-void enter_command(t_buffer *line)
+static void enter_command(t_buffer *line)
 {
     if(line->index != line->len)
         uart_write_bytes(UART_NUM_1, (const char *)&line->data[line->index],

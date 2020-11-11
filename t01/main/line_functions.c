@@ -31,3 +31,14 @@ void add_buffer_to_line(t_buffer *buf, t_buffer *line)
     //todo: check \n case with small terminal 2 lines
 }
 
+
+_Bool buffer_parse(t_buffer *buf)
+{
+    if (!buf)
+        return false;
+    for (int i = 0; i < buf->len; ++i) {
+        if (!isprint(buf->data[i]) || isupper(buf->data[i]))
+            return false;
+    }
+    return true;
+}
