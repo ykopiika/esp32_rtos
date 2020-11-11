@@ -1,7 +1,8 @@
 idf_component_register(
     SRCS "main.c"
-    SRCS "parse_command.c"
-    SRCS "line_functions.c"
+    SRCS "parse_uart_event.c"
+    SRCS "parse_uart_buffer.c"
+    SRCS "parse_command_line.c"
     INCLUDE_DIRS "."
 #    REQUIRES oled
 )

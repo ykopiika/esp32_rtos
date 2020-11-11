@@ -52,9 +52,10 @@ typedef struct  s_app
     uart_config_t uart_config;
 }               t_app;
 
-_Bool buffer_parse(t_buffer *buf);
-void add_buffer_to_line(t_buffer *buf, t_buffer *line);
-void parse_command(t_buffer *buf, t_buffer *line);
+_Bool   parse_uart_buffer(t_buffer *buf);
+void    parse_uart_event(t_buffer *buf, t_buffer *line);
+void    add_buffer_to_line(t_buffer *buf, t_buffer *line);
+void    parse_command_line(t_buffer *line);
 //void print_new_line(_Bool is_first_line);
 
 #endif

@@ -1,6 +1,6 @@
 #include "main.h"
 
-static TaskHandle_t uart_tsk = NULL;
+//static TaskHandle_t uart_tsk = NULL;
 QueueHandle_t uart0_queue = NULL;
 
 static void read_from_uart(void *param)
@@ -11,7 +11,7 @@ static void read_from_uart(void *param)
 
     memset(&a->buf, 0, sizeof(a->buf));
     memset(&a->line, 0, sizeof(a->line));
-    uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
+    uart_write_bytes(UART_NUM_1, "\r\n$ ", 4); // todo
     while (on)
     {
         if (xQueueReceive(uart0_queue, (void *)&a->event,
@@ -20,18 +20,20 @@ static void read_from_uart(void *param)
             {
                 a->buf.len = a->event.size;
                 uart_read_bytes(UART_NUM_1, a->buf.data, a->event.size, 0);
-                if (buffer_parse(&a->buf))
+                if (parse_uart_buffer(&a->buf))
                     add_buffer_to_line(&a->buf, &a->line); // todo add full line logic
                 else
-                    parse_command(&a->buf, &a->line);
-                if (a->line.index == (MAX_LEN - 1) && !is_printed_alarm)
+                    parse_uart_event(&a->buf, &a->line);
+                if (a->line.len == (MAX_LEN - 1) && !is_printed_alarm)
                 {
                         is_printed_alarm = true;
-                        char str[] = T_GRN"\r\n\n==>\tline is full\r\n\n$ "R;
+                        char str[] = T_GRN"\r\n\n==>\tline is full\r\n\n"R
+                                    "$ "
+                                    "\xE2\x9C\x85";
                         uart_write_bytes(UART_NUM_1, str, sizeof(str));
                         uart_write_bytes(UART_NUM_1, (const char *) a->line.data, a->line.len);
                 }
-                else if (is_printed_alarm && a->line.index != (MAX_LEN - 1))
+                else if (is_printed_alarm && a->line.len != (MAX_LEN - 1))
                     is_printed_alarm = false;
             }
             printf(T_YEL"buf len:%d\n"R, a->buf.len);

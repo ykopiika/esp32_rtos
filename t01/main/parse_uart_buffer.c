@@ -31,8 +31,7 @@ void add_buffer_to_line(t_buffer *buf, t_buffer *line)
     //todo: check \n case with small terminal 2 lines
 }
 
-
-_Bool buffer_parse(t_buffer *buf)
+_Bool parse_uart_buffer(t_buffer *buf)
 {
     if (!buf)
         return false;

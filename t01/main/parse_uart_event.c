@@ -61,14 +61,12 @@ static void enter_command(t_buffer *line)
         uart_write_bytes(UART_NUM_1, (const char *)&line->data[line->index],
                          (line->len - line->index));
     uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
-    printf(T_RED"\nparse && clear line\n"R);
-    //                    parse_line(); //todo parse line
-//                    clear_line(); //todo clear line
+    parse_command_line(line);
     memset(line, 0, sizeof(*line));
     printf(T_RED"line: %zu, *line: %zu\n"R, sizeof(line), sizeof(*line));
 }
 
-void parse_command(t_buffer *buf, t_buffer *line)
+void parse_uart_event(t_buffer *buf, t_buffer *line)
 {
     if (!buf || !line)
         return;
