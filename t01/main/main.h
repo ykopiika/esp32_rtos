@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <regex.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -37,6 +38,22 @@
 
 #define R "\x1B[0m"		 // reset
 
+typedef struct  s_cmd_config
+{
+	char		regex[100];
+	int 		int_arg_num;
+	int 		dbl_arg_num;
+	void		(*func)(void*);
+}               t_cmd_config;
+
+typedef struct  s_command
+{
+    char		*reg_str;
+    int			*int_arg;
+    double 		*dbl_arg;
+	void		(**func)(void*);
+}               t_command;
+
 typedef struct  s_buffer
 {
     uint8_t     data[MAX_LEN];
@@ -46,16 +63,19 @@ typedef struct  s_buffer
     
 typedef struct  s_app
 {
-    t_buffer buf;
-    t_buffer line;
-    uart_event_t event;
-    uart_config_t uart_config;
+    t_buffer        buf;
+    t_buffer        line;
+    t_command       *cmd;
+    uart_event_t    event;
+    uart_config_t   uart_config;
 }               t_app;
 
 _Bool   parse_uart_buffer(t_buffer *buf);
-void    parse_uart_event(t_buffer *buf, t_buffer *line);
+void parse_uart_event(t_buffer *buf, t_buffer *line, t_command *cmds);
 void    add_buffer_to_line(t_buffer *buf, t_buffer *line);
-void    parse_command_line(t_buffer *line);
+void parse_command_line(t_buffer *line, t_command *cmds);
 //void print_new_line(_Bool is_first_line);
+void	led_on(void *ptr);
+void	led_off(void *ptr);
 
 #endif

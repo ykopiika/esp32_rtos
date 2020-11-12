@@ -55,28 +55,28 @@ static void backspase_command(t_buffer *line)
     }
 }
 
-static void enter_command(t_buffer *line)
+static void enter_command(t_buffer *line, t_command *cmds)
 {
     if(line->index != line->len)
         uart_write_bytes(UART_NUM_1, (const char *)&line->data[line->index],
                          (line->len - line->index));
     uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
-    parse_command_line(line);
-    memset(line, 0, sizeof(*line));
+	parse_command_line(line, cmds);
+	memset(line, 0, sizeof(*line));
     printf(T_RED"line: %zu, *line: %zu\n"R, sizeof(line), sizeof(*line));
 }
 
-void parse_uart_event(t_buffer *buf, t_buffer *line)
+void parse_uart_event(t_buffer *buf, t_buffer *line, t_command *cmds)
 {
-    if (!buf || !line)
-        return;
-    if (buf->len == 1)
-    {
-        if (buf->data[0] == 13) // enter was pressed
-            enter_command(line);
-        else if (buf->data[0] == 127) //backspace was pressed
-            backspase_command(line);
-    }
-    else if (buf->len == 3 && buf->data[0] == 27 && buf->data[1] == 91)
-        arrow_commands(buf, line);
+	if (!buf || !line)
+		return;
+	if (buf->len == 1)
+	{
+		if (buf->data[0] == 13) // enter was pressed
+			enter_command(line, cmds);
+		else if (buf->data[0] == 127) //backspace was pressed
+			backspase_command(line);
+	}
+	else if (buf->len == 3 && buf->data[0] == 27 && buf->data[1] == 91)
+		arrow_commands(buf, line);
 }
