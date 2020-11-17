@@ -9,49 +9,33 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 #include "driver/uart.h"
+#include "libft.h"
+#include "error_functions.h"
 
 
 #define UART_TX_PIN 17
 #define UART_RX_PIN 16
 #define MAX_LEN 120
+#define CMD_LEN 3
 
-#define T_BLK "\x1b[30m" // 30 - text is 	black
-#define T_RED "\x1b[31m" // 31 - text is 	red
-#define T_GRN "\x1b[32m" // 32 - text is 	green
-#define T_YEL "\x1b[33m" // 33 - text is 	yellow
-#define T_BLU "\x1b[34m" // 34 - text is 	blue
-#define T_PNK "\x1b[35m" // 35 - text is 	pink
-#define T_TRK "\x1b[36m" // 36 - text is 	turquoise
+#define ERR_MALLOC "Fatal: malloc failed!"
+#define ERR_VAL_NULL "Fatal: value is NULL!"
 
-#define M_BLK "\x1b[40m" // 40 - black 		marker for text
-#define M_RED "\x1b[41m" // 41 - red 		marker for text
-#define M_GRN "\x1b[42m" // 42 - green		marker for text
-#define M_YEL "\x1b[43m" // 43 - yellow		marker for text
-#define M_BLU "\x1b[44m" // 44 - blue		marker for text
-#define M_PNK "\x1b[45m" // 45 - pink		marker for text
-#define M_TRK "\x1b[46m" // 46 - turquoise	marker for text
 
-#define T_BLD "\x1b[1m"  //  1  bold 		text
-#define T_CRS "\x1b[3m"  //  3  cursive 	text
-#define T_UNL "\x1b[4m"  //  4  underline 	text
-#define T_SLV "\x1b[2m"  //  2  text is 	silver
-
-#define R "\x1B[0m"		 // reset
+typedef	void	(*t_fnxptr)(void*);
 
 typedef struct  s_cmd_config
 {
-	char		regex[100];
+	t_fnxptr	func[5];
 	int 		int_arg_num;
 	int 		dbl_arg_num;
-	void		(*func)(void*);
 }               t_cmd_config;
 
 typedef struct  s_command
 {
-    char		*reg_str;
-    int			*int_arg;
-    double 		*dbl_arg;
-	void		(**func)(void*);
+    char		*cmd_name;
+    char		**cmd_sub_names;
+	t_fnxptr	*func;
 }               t_command;
 
 typedef struct  s_buffer
@@ -71,11 +55,12 @@ typedef struct  s_app
 }               t_app;
 
 _Bool   parse_uart_buffer(t_buffer *buf);
-void parse_uart_event(t_buffer *buf, t_buffer *line, t_command *cmds);
+void	parse_uart_event(t_buffer *buf, t_buffer *line, t_command *cmds);
 void    add_buffer_to_line(t_buffer *buf, t_buffer *line);
-void parse_command_line(t_buffer *line, t_command *cmds);
+void	parse_command_line(t_buffer *line, t_command *cmds);
 //void print_new_line(_Bool is_first_line);
 void	led_on(void *ptr);
 void	led_off(void *ptr);
+void	led_pulse(void *ptr);
 
 #endif

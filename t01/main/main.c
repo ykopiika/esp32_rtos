@@ -51,33 +51,34 @@ static void read_from_uart(void *param)
     }
 }
 
-static void setting_cmd(t_command *cmd, t_cmd_config config)
+static void setting_cmd(t_command *cmd, char *name,
+						char *sub, t_fnxptr *fx_arr)
 {
-	cmd->reg_str = strdup(config.regex);// todo: err_print_exit
-	cmd->func = malloc(sizeof(cmd->func)*2);
-	cmd->func[0] = &led_on;
-	cmd->func[1] = &led_off;
-	cmd->int_arg = (int*)malloc(sizeof(int)*config.int_arg_num);// todo: err_print_exit
-	cmd->dbl_arg = NULL; // todo: err_print_exit
+	int size = 0;
+
+	cmd->cmd_name = strdup(name);
+	cmd->cmd_sub_names = ft_split_count(sub, ' ', &size);
+	cmd->func = ft_memdup(fx_arr, sizeof(*fx_arr));
+	printf("\t\t\t\t ================= %s \tsize = %d\n",name, size);
 }
 
-static void command_registration(t_app *app, int size)
+static void command_registration(t_app *app)
 {
 	t_cmd_config config;
 
 	if (!app)
-		return; // todo: err_print_exit
-	app->cmd = (t_command*)malloc(sizeof(t_command)*size);
+		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
+	app->cmd = (t_command *)malloc(sizeof(t_command) * CMD_LEN);
 	if (!app->cmd)
-		return; // todo: err_print_exit
+		err_print_exit(ERR_MALLOC, __FILE__, __func__, __LINE__);
 	memset(app->cmd, 0, sizeof(*app->cmd));
 	memset(&config, 0, sizeof(config));
-	config = (t_cmd_config){
-		.regex = "/^led (on|off)( [1-3])( [1-3])?( [1-3])?$/",
-		.int_arg_num = 3,
-		.dbl_arg_num = 0,
-	};
-	setting_cmd(app->cmd, config);
+
+	t_fnxptr fx_arr[] = {&led_on, &led_off, &led_pulse};
+	setting_cmd(&app->cmd[0],
+			 "led",
+			 "on off pulse",
+			 fx_arr);
 }
 
 static void init_app(t_app *app)
@@ -100,7 +101,7 @@ static void init_app(t_app *app)
         uart_set_pin(UART_NUM_1, UART_TX_PIN, UART_RX_PIN,
                             UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
         uart_pattern_queue_reset(UART_NUM_1, 20);
-	command_registration(app, 3);
+	command_registration(app);
 }
 
 void app_main(void)
