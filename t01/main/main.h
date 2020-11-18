@@ -21,22 +21,17 @@
 #define ERR_MALLOC "Fatal: malloc failed!"
 #define ERR_VAL_NULL "Fatal: value is NULL!"
 
-
 typedef	void	(*t_fnxptr)(void*);
+typedef struct  s_command	t_command;
+typedef struct  s_subcmd	t_subcmd;
 
-typedef struct  s_cmd_config
+enum				e_state
 {
-	t_fnxptr	func[5];
-	int 		int_arg_num;
-	int 		dbl_arg_num;
-}               t_cmd_config;
-
-typedef struct  s_command
-{
-    char		*cmd_name;
-    char		**cmd_sub_names;
-	t_fnxptr	*func;
-}               t_command;
+	ST_NOT_FOUND = 0,
+	ST_NOT_VALID = 1,
+	ST_SUCCESS = 2,
+	ST_OK = 3,
+};
 
 typedef struct  s_buffer
 {
@@ -44,15 +39,22 @@ typedef struct  s_buffer
     size_t      len;
     size_t      index;
 }               t_buffer;
-    
-typedef struct  s_app
+
+struct  s_subcmd
 {
-    t_buffer        buf;
-    t_buffer        line;
-    t_command       *cmd;
-    uart_event_t    event;
-    uart_config_t   uart_config;
-}               t_app;
+    char		*name;
+	t_fnxptr	func;
+
+	t_subcmd 	*next;
+};
+
+struct  s_command
+{
+    char		*name;
+
+	t_command	*next;
+	t_subcmd 	*down;
+};
 
 _Bool   parse_uart_buffer(t_buffer *buf);
 void	parse_uart_event(t_buffer *buf, t_buffer *line, t_command *cmds);
@@ -62,5 +64,7 @@ void	parse_command_line(t_buffer *line, t_command *cmds);
 void	led_on(void *ptr);
 void	led_off(void *ptr);
 void	led_pulse(void *ptr);
+t_command	*command_registration(char *name, char *sub, t_fnxptr *fx_arr);
+
 
 #endif

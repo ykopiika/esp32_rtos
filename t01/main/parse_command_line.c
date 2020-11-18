@@ -20,35 +20,28 @@ void	led_pulse(void *ptr)
 
 void parse_command_line(t_buffer *line, t_command *cmds)
 {
-	char **str = NULL;
-	int len = 0;
+	char	**str = NULL;
+	int		len = 0;
+	int 	result = ST_OK;
 
 	if (!line || !cmds)
 		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
 	str = ft_split_count((char *)line->data, ' ', &len);
 	printf("\t\t\t\t=============> LEN:  %d\n", len);
+	if (len == 0)
+		result = ST_NOT_FOUND;
+//	if (result == ST_OK)
+//		result = search_command(str);
+//	run_comm
+
 	for (int i = 0; i < len; ++i)
 	{
 		printf("\t\t\t\t%s|\n", str[i]);
 	}
-	if (str != NULL)
-	{
-		for (int i = 0; i < len; ++i)
-		{
-			if (str[i] != NULL)
-				free(str[i]);
-		}
-		if (str != NULL)
-			free(str);
-	}
-//	char *arr[] = {"str","","array"};
-//	int size;
-//	int size = ft_array_len((void **) arr);
-//	printf("size **arr = %d\n", size);
-	printf("size cmds->func = %zu %zu\n", sizeof(cmds->func), sizeof(*cmds->func));
-	cmds->func[0](line);
-	cmds->func[1](line);
-	cmds->func[2](line);
-	printf(T_RED"\nparse line\n"R);
+//	command_compare(str)
+
+	ft_free_array_strings(str);
+	if (result == ST_NOT_FOUND)
+		printf(T_TRK"\t\t\t\t********** cmd not found *********\n"R);
 }
 
