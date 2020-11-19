@@ -4,6 +4,8 @@ idf_component_register(
     SRCS "parse_uart_buffer.c"
     SRCS "parse_command_line.c"
     SRCS "command_registration.c"
+    SRCS "search_command.c"
+    SRCS "led_functions.c"
     INCLUDE_DIRS "."
     REQUIRES my_lib_func
     REQUIRES custom_error_functions

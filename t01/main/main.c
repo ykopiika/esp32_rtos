@@ -21,11 +21,13 @@ static void read_from_uart(void *param)
 	t_buffer        buf;
 	t_buffer        line;
 	uart_event_t    event;
+	t_lst			*head = NULL;
     _Bool on = true;
     _Bool is_printed_alarm = false;
 
 	memset(&buf, 0, sizeof(buf));
     memset(&line, 0, sizeof(line));
+    add_new_lst();
     uart_write_bytes(UART_NUM_1, "\r\n$ ", 4); // todo
     while (on)
     {
@@ -63,7 +65,7 @@ static t_command	*init_commands(void)
 {
 	t_command		*lst = NULL;
 	t_command		*ptr = NULL;
-	t_fnxptr		fx_arr[] = {led_on, led_off, led_pulse};
+	t_fnxptr		fx_arr[] = {led_on_off, led_on_off, led_pulse};
 
 	lst = command_registration("led", "on off pulse", fx_arr);
 	if (!lst)
