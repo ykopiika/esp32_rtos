@@ -13,6 +13,7 @@
 #include "error_functions.h"
 #include "driver/gpio.h"
 #include "stdlib.h"
+#include "flashing_leds.h"
 
 #define UART_TX_PIN 17
 #define UART_RX_PIN 16
@@ -32,8 +33,13 @@ enum			e_state
 
 typedef struct  s_command	t_command;
 typedef struct  s_subcmd	t_subcmd;
-typedef struct  s_lst		t_lst;
 typedef	int		(*t_fnxptr)(void *);
+
+typedef struct  s_pwm
+{
+	int			led;
+	int 		frq;
+}				t_pwm;
 
 typedef struct  s_param
 {
@@ -41,27 +47,12 @@ typedef struct  s_param
 	int			len;
 }				t_param;
 
-typedef struct  s_flags
-{
-	_Bool		is_up_pressed;
-	_Bool		is_down_pressed;
-	int 		node_count;
-}               t_flags;
-
 typedef struct  s_buffer
 {
     uint8_t     data[MAX_LEN];
     size_t      len;
     size_t      index;
 }               t_buffer;
-
-struct  s_lst
-{
-	t_buffer	line;
-
-	t_lst		*next;
-	t_lst		*previous;
-};
 
 struct  s_subcmd
 {
@@ -81,8 +72,7 @@ struct  s_command
 
 t_command	*command_registration(char *name, char *sub,
 								t_fnxptr *fx_arr);
-void		parse_uart_event(t_buffer *buf, t_buffer *line,
-								t_command *cmds);
+void parse_uart_event(t_buffer *buf, t_buffer *line, t_command *cmds);
 _Bool		parse_uart_buffer(t_buffer *buf);
 void		add_buffer_to_line(t_buffer *buf, t_buffer *line);
 void		parse_command_line(t_buffer *line, t_command *cmds);

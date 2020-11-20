@@ -3,9 +3,13 @@
 static void arrow_commands(t_buffer *buf, t_buffer *line)
 {
     if (buf->data[2] == 65)
+	{
         printf("UP ");
+	}
     else if (buf->data[2] == 66)
+	{
         printf("DOWN ");
+	}
     else if (buf->data[2] == 67)
     {
         printf("RIGHT ");

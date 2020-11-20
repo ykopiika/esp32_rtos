@@ -1,8 +1,41 @@
 #include "main.h"
 
-static void	make_pulse(int led_num, double dbl)
+
+void hello_led(void *param)
 {
-	return;
+	t_pwm *pwm = (t_pwm*)param;
+	ledc_timer_config_t ledc_timer;
+	ledc_channel_config_t ledc_channel;
+	data_init(&ledc_timer, &ledc_channel, GPIO_NUM_26);
+	printf(T_TRK"\t\t\t\t\t\t\t\t===> f = %d    num = %d"R, pwm->led, pwm->frq);
+	while (1)
+	{
+		pwm_flashing(&ledc_channel, 1200);
+	}
+}
+
+//void hello_led(void *param)
+//{
+//	t_pwm *pwm = (t_pwm*)param;
+//	ESP_ERROR_CHECK(gpio_set_direction(GPIO_NUM_26, GPIO_MODE_OUTPUT));
+//	ESP_ERROR_CHECK(gpio_set_direction(GPIO_NUM_27, GPIO_MODE_OUTPUT));
+//	ESP_ERROR_CHECK(gpio_set_direction(GPIO_NUM_33, GPIO_MODE_OUTPUT));
+//	printf(T_TRK"\t\t\t\t\t\t\t\t===> f = %d    num = %d"R, pwm->led, pwm->frq);
+//	while (1)
+//	{
+//		ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_26, 1));
+//		vTaskDelay(2);
+//		ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_26, 0));
+//		vTaskDelay(2);
+//	}
+//}
+
+static void	make_pulse(int led, int frq)
+{
+	t_pwm pwm = {led, frq};
+	printf("\t\t\t\t\t\t\t\t===> f = %d    num = %d", led, frq);
+//	xTaskNotify(leds_management, pwm, eSetValueWithOverwrite);
+	xTaskCreate(hello_led, "led", 4096, (void *) &pwm, 5, NULL);
 }
 
 int	led_on_off(void *ptr)
@@ -56,7 +89,8 @@ int	led_pulse(void *ptr)
 	nbr = atoi(p->str[2]);
 	if ((nbr < 1) || (nbr > 3))
 		return ST_NOT_VALID;
-	make_pulse(leds[nbr - 1], dbl);
+	(void)dbl;//todo calculate frq
+	make_pulse(leds[nbr - 1], 1000);
 	for (int i = 0; i < p->len; ++i)
 	{
 		printf("\t\t\t\t%s|\n", p->str[i]);

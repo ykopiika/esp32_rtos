@@ -1,6 +1,5 @@
 #include "main.h"
 
-//static TaskHandle_t uart_tsk = NULL;
 QueueHandle_t uart0_queue = NULL;
 
 void debug(t_buffer buf, t_buffer line, uart_event_t event)
@@ -21,13 +20,11 @@ static void read_from_uart(void *param)
 	t_buffer        buf;
 	t_buffer        line;
 	uart_event_t    event;
-	t_lst			*head = NULL;
     _Bool on = true;
     _Bool is_printed_alarm = false;
 
 	memset(&buf, 0, sizeof(buf));
     memset(&line, 0, sizeof(line));
-    add_new_lst();
     uart_write_bytes(UART_NUM_1, "\r\n$ ", 4); // todo
     while (on)
     {
@@ -64,7 +61,7 @@ static void read_from_uart(void *param)
 static t_command	*init_commands(void)
 {
 	t_command		*lst = NULL;
-	t_command		*ptr = NULL;
+//	t_command		*ptr = NULL;
 	t_fnxptr		fx_arr[] = {led_on_off, led_on_off, led_pulse};
 
 	lst = command_registration("led", "on off pulse", fx_arr);
@@ -92,6 +89,22 @@ static void init_uart(uart_config_t *uart)
     uart_pattern_queue_reset(UART_NUM_1, 20);
 }
 
+//static void oled_brightness(void *param)
+//{
+//	_Bool on = true;
+//	uint32_t result = 0;
+//
+//	while(on)
+//	{
+//			if(xTaskNotifyWait(0, 0, &result, 1) == pdTRUE)
+//			{
+//				printf(T_TRK"\t\t\t\t\t\t===========>"R);
+//			}
+//			gpio_set_level()
+//		vTaskDelay(10 / portTICK_PERIOD_MS);
+//	}
+//}
+
 void app_main(void)
 {
 	uart_config_t   uart_config;
@@ -102,8 +115,10 @@ void app_main(void)
 	if (!lst)
 		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
 
+//	xTaskCreate(oled_brightness, "ffffff",
+//				4096, (void *)lst, 5, NULL);
     xTaskCreate(read_from_uart, "read_uart",
-                4096, (void *)lst, 10, NULL);
+                4096, (void *)lst, 5, NULL);
 }
 
 //            if (uart_write_bytes(UART_NUM_1,
