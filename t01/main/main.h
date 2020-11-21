@@ -14,6 +14,7 @@
 #include "driver/gpio.h"
 #include "stdlib.h"
 #include "flashing_leds.h"
+#include "math.h"
 
 #define UART_TX_PIN 17
 #define UART_RX_PIN 16
@@ -45,6 +46,7 @@ typedef struct  s_param
 {
 	char		**str;
 	int			len;
+	t_pwm		pwm;
 }				t_param;
 
 typedef struct  s_buffer
@@ -76,7 +78,6 @@ void parse_uart_event(t_buffer *buf, t_buffer *line, t_command *cmds);
 _Bool		parse_uart_buffer(t_buffer *buf);
 void		add_buffer_to_line(t_buffer *buf, t_buffer *line);
 void		parse_command_line(t_buffer *line, t_command *cmds);
-int			search_command(char **str, int len, t_command *cmds);
 int			led_on_off(void *ptr);
 int			led_pulse(void *ptr);
 

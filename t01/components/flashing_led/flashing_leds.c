@@ -16,7 +16,7 @@ void data_init(ledc_timer_config_t *ledc_timer,
     *ledc_channel = (ledc_channel_config_t){
             .channel    = LEDC_CHANNEL_0,
             .duty       = 0,
-            .gpio_num   = GPIO_NUM_27,
+            .gpio_num   = led,
             .speed_mode = LEDC_HIGH_SPEED_MODE,
             .hpoint     = 0,
             .timer_sel  = LEDC_TIMER_0
@@ -42,11 +42,12 @@ void dac_flashing(void)
 
 void pwm_flashing(ledc_channel_config_t *ledc_channel, int frq)
 {
+	printf("\t\t\t\t\t\t\t\t\t++++++++++ FRQ %d\n", frq);
     ESP_ERROR_CHECK(ledc_set_fade_with_time(ledc_channel->speed_mode,
                        ledc_channel->channel, LEDC_TEST_DUTY, frq));
     ESP_ERROR_CHECK(ledc_fade_start(ledc_channel->speed_mode,
                     ledc_channel->channel, LEDC_FADE_WAIT_DONE));
-    vTaskDelay(30 / portTICK_PERIOD_MS);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
     ESP_ERROR_CHECK(ledc_set_fade_with_time(ledc_channel->speed_mode,
                             ledc_channel->channel, 0, frq));
     ESP_ERROR_CHECK(ledc_fade_start(ledc_channel->speed_mode,
