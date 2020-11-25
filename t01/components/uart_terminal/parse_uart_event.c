@@ -1,4 +1,4 @@
-#include "main.h"
+#include "uart_terminal.h"
 
 static void arrow_commands(t_buffer *buf, t_buffer *line)
 {

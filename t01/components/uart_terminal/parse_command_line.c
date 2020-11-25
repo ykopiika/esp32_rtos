@@ -1,4 +1,4 @@
-#include "main.h"
+#include "uart_terminal.h"
 
 static int	search_sub_command(t_subcmd *subcmd, char **str, int len)
 {
@@ -39,7 +39,6 @@ void		parse_command_line(t_buffer *line, t_command *cmds)
 	if (!line || !cmds)
 		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
 	str = ft_split_count((char *)line->data, ' ', &len);
-	printf("\t\t\t\t=============> LEN:  %d\n", len);
 	result = search_command(str, len, cmds);
 	if (result == ST_NOT_FOUND && len == 0)
 		result = ST_OK;

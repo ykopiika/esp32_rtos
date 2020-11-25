@@ -1,4 +1,4 @@
-#include "main.h"
+#include "uart_terminal.h"
 
 void add_buffer_to_line(t_buffer *buf, t_buffer *line)
 {

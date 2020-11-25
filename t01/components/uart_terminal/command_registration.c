@@ -1,4 +1,4 @@
-#include "main.h"
+#include "uart_terminal.h"
 
 static t_subcmd 	*create_sub_node(char *name, t_fnxptr func)
 {
