@@ -44,10 +44,18 @@ void		parse_command_line(t_buffer *line, t_command *cmds)
 		result = ST_OK;
 	ft_free_array_strings(str);
 	if (result == ST_NOT_VALID)
-		printf(T_TRK"\t\t\t\t********** cmd NOT_VALID *********\n"R);
+	{
+		uart_write_bytes(UART_NUM_1, T_PNK"command not valid"R,
+				   sizeof(T_PNK"command not valid"R));
+		uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
+	}
 	if (result == ST_NOT_FOUND)
-		printf(T_TRK"\t\t\t\t********** cmd not found *********\n"R);
+	{
+		uart_write_bytes(UART_NUM_1, T_PNK"command not found"R,
+						 sizeof(T_PNK"command not found"R));
+		uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
+	}
 	if (result == ST_SUCCESS)
-		printf(T_TRK"\t\t\t\t********** SUCCESS *********\n"R);
+		printf(T_TRK"\t\t\t\t SUCCESS \n"R);
 }
 

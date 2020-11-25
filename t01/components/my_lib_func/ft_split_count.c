@@ -1,6 +1,5 @@
 #include "libft.h"
 
-
 static size_t		ft_wc(char const *s, char c)
 {
 	size_t		w;
