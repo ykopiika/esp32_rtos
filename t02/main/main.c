@@ -3,11 +3,18 @@
 static t_command	*init_commands(void)
 {
 	t_command		*lst = NULL;
+	t_command		*ptr = NULL;
 	t_fnxptr		fx_arr[] = {led_on_off, led_on_off, led_pulse};
 
 	lst = command_registration("led", "on off pulse", fx_arr);
 	if (!lst)
 		return NULL;
+	fx_arr[0] = print_all_lists;
+	fx_arr[1] = NULL;
+	fx_arr[2] = NULL;
+	ptr = lst;
+	ptr->next = command_registration("dht", "log", fx_arr);
+//	ptr = ptr->next;
 	return lst;
 }
 
@@ -16,12 +23,12 @@ static void init_components(uart_config_t *uart_config, t_command **lst)
 	timer_config_t config = {
 			.alarm_en = TIMER_ALARM_DIS,
 			.counter_en = TIMER_START,
-			.intr_type = TIMER_INTR_NONE,
+			.intr_type = TIMER_INTR_LEVEL,
 			.counter_dir = TIMER_COUNT_UP,
 			.auto_reload = TIMER_AUTORELOAD_DIS,
 			.divider = TIMER_DIVIDER,
-	}; // default clock source is APB
-	timer_init(TIMER_GROUP_0, timer_idx, &config);
+	};
+	ESP_ERROR_CHECK(timer_init(TIMER_GROUP_0, TIMER_0, &config));
 
 	init_uart(uart_config);
 	dht11_init();
@@ -36,7 +43,10 @@ void app_main(void)
 	t_command		*lst = NULL;
 
 	init_components(&uart_config, &lst);
-    xTaskCreate(dht_measuring_tsk, "dht_measuring",
+
+	xTaskCreate(dht_measuring_tsk, "dht_measuring",
+				2048, NULL, 10, NULL);
+    xTaskCreate(dht_write_to_lists_tsk, "dht_write_to_lists",
                 2048, NULL, 10, NULL);
     xTaskCreate(read_from_uart, "read_uart",
                 4096, (void *)lst, 5, NULL);

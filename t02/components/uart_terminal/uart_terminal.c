@@ -28,7 +28,7 @@ void read_from_uart(void *param)
 
 	memset(&buf, 0, sizeof(buf));
 	memset(&line, 0, sizeof(line));
-	uart_write_bytes(UART_NUM_1, "\r\n$ ", 4); // todo
+	uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
 	while (on)
 	{
 		if (xQueueReceive(uart0_queue, (void *)&event, portMAX_DELAY))

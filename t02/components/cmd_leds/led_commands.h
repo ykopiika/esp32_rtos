@@ -8,13 +8,7 @@
 #include "freertos/task.h"
 #include "driver/gpio.h"
 
-enum			e_state
-{
-	ST_NOT_FOUND = 0,
-	ST_NOT_VALID = 1,
-	ST_SUCCESS = 2,
-	ST_OK = 3,
-};
+#include "error_functions.h"
 
 typedef struct  s_pwm
 {

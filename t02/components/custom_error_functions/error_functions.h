@@ -26,6 +26,19 @@
 
 #define R "\x1B[0m"		 // reset
 
+
+#define ERR_MALLOC "Fatal: malloc failed!"
+#define ERR_VAL_NULL "Fatal: value is NULL!"
+
+enum			e_state
+{
+	ST_NOT_FOUND = 0,
+	ST_NOT_VALID = 1,
+	ST_SUCCESS = 2,
+	ST_OK = 3,
+	ST_CMD_FAILED = 4,
+};
+
 _Bool false_and_printf(const char *fxname, int lineno, char *str);
 
 void err_print_exit(const char *err_str,

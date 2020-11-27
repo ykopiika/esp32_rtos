@@ -70,7 +70,7 @@ void dht11_init(void)
     ESP_ERROR_CHECK(gpio_set_direction(DH11_DATA_PIN, GPIO_MODE_OUTPUT));
     ESP_ERROR_CHECK(gpio_set_level(DH11_POWER_PIN, 1));
     ESP_ERROR_CHECK(gpio_set_level(DH11_DATA_PIN, 1));
-    ets_delay_us(1000100);
+    ets_delay_us(2000000);
 }
 
 void get_value_dht11(uint8_t *temperature, uint8_t *humidity)

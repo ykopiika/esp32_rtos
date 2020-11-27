@@ -9,6 +9,7 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 #include "driver/uart.h"
+
 #include "libft.h"
 #include "error_functions.h"
 #include "led_commands.h"
@@ -18,8 +19,6 @@
 #define MAX_LEN 40
 #define CMD_LEN 3
 
-#define ERR_MALLOC "Fatal: malloc failed!"
-#define ERR_VAL_NULL "Fatal: value is NULL!"
 
 typedef struct  s_command	t_command;
 typedef struct  s_subcmd	t_subcmd;

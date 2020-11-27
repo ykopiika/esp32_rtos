@@ -57,5 +57,7 @@ void		parse_command_line(t_buffer *line, t_command *cmds)
 	}
 	if (result == ST_SUCCESS)
 		printf(T_TRK"\t\t\t\t SUCCESS \n"R);
+	if (result == ST_CMD_FAILED)
+		printf(T_TRK"\t\t\t\t CMD_FAILED \n"R);
 }
 

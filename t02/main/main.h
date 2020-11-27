@@ -4,6 +4,5 @@
 #include "error_functions.h"
 #include "uart_terminal.h"
 #include "dht_11.h"
-#include "driver/timer.h"
 
 #endif
