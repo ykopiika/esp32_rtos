@@ -31,30 +31,29 @@ static t_command	*init_commands(void)
 	return lst;
 }
 
-static void init_components(t_command **lst)
+static void init_components(t_data *data)
 {
 	init_timer();
 	init_uart();
 	dht11_init();
-	*lst = init_commands();
-	if (!*lst)
+	data->lst = init_commands();
+	if (!data->lst)
 		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
 }
 
 void app_main(void)
 {
 	t_data			*data;
-	t_command		*lst = NULL;
 
 	if (!(data = (t_data*)malloc(sizeof(t_data))))
 		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
+	bzero(data, sizeof(*data));
 
-	init_components(&lst);
-
+	init_components(data);
 	xTaskCreate(dht_measuring_tsk, "dht_measuring",
 				2048, NULL, 10, NULL);
     xTaskCreate(dht_write_to_lists_tsk, "dht_write_to_lists",
                 2048, NULL, 10, NULL);
     xTaskCreate(read_from_uart, "read_uart",
-                4096, (void *)lst, 5, NULL);
+                4096, (void *)data, 5, NULL);
 }

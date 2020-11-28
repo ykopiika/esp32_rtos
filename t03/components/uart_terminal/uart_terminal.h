@@ -13,6 +13,7 @@
 #include "libft.h"
 #include "error_functions.h"
 #include "led_commands.h"
+#include "structs.h"
 
 #define UART_TX_PIN 17
 #define UART_RX_PIN 16
@@ -20,9 +21,6 @@
 #define CMD_LEN 3
 
 
-typedef struct  s_command	t_command;
-typedef struct  s_subcmd	t_subcmd;
-typedef	int		(*t_fnxptr)(void *);
 
 typedef struct  s_buffer
 {
@@ -30,22 +28,6 @@ typedef struct  s_buffer
 	size_t      len;
 	size_t      index;
 }               t_buffer;
-
-struct  s_subcmd
-{
-	char		*name;
-	t_fnxptr	func;
-
-	t_subcmd 	*next;
-};
-
-struct  s_command
-{
-	char		*name;
-
-	t_command	*next;
-	t_subcmd 	*down;
-};
 
 t_command	*command_registration(char *name, char *sub,
 								   t_fnxptr *fx_arr);

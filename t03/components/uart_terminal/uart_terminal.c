@@ -19,7 +19,7 @@ static void full_line_check(t_buffer line, 	_Bool *is_printed_alarm)
 
 void read_from_uart(void *param)
 {
-	t_command		*cmds = (t_command*)param;
+	t_data			*d = (t_data*)param;
 	t_buffer        buf;
 	t_buffer        line;
 	uart_event_t    event;
@@ -40,7 +40,7 @@ void read_from_uart(void *param)
 				if (parse_uart_buffer(&buf))
 					add_buffer_to_line(&buf, &line);
 				else
-					parse_uart_event(&buf, &line, cmds);
+					parse_uart_event(&buf, &line, d->lst);
 				full_line_check(line, &is_printed_alarm);
 			}
 			memset(&buf, 0, sizeof(buf));

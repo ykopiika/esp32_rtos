@@ -8,4 +8,5 @@ idf_component_register(
         REQUIRES cmd_leds
         REQUIRES my_lib_func
         REQUIRES custom_error_functions
+        REQUIRES structs
 )
