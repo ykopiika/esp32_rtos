@@ -35,12 +35,21 @@ struct  s_command
 	t_command	*next;
 	t_subcmd 	*down;
 };
+
+typedef struct		s_cmd_tmp
+{
+	char		**str;
+	int			len;
+	int			led;
+	int 		frq;
+}					t_cmd_tmp;
 //------------------------------------------------ for uart end
 
 typedef struct	s_data
 {
-	t_command	*lst;
+	t_command	*cmds;
 	t_oled		oled;
+	t_cmd_tmp	tmp;
 }				t_data;
 
 #endif

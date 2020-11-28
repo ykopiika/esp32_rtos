@@ -40,7 +40,7 @@ void read_from_uart(void *param)
 				if (parse_uart_buffer(&buf))
 					add_buffer_to_line(&buf, &line);
 				else
-					parse_uart_event(&buf, &line, d->lst);
+					parse_uart_event(&buf, &line, d);
 				full_line_check(line, &is_printed_alarm);
 			}
 			memset(&buf, 0, sizeof(buf));

@@ -39,10 +39,10 @@ static void init_components(t_data *data)
 	init_uart();
 	dht11_init();
 	init_oled(&data->oled);
-	data->lst = init_commands();
-	str_to_oled(&data->oled, "HELLO__HELLo");
+	data->cmds = init_commands();
+	str_to_oled_6x8(&data->oled, "HELLO__HELLo");
 	clear_pixels(&data->oled);
-	str_to_oled(&data->oled, "WORLD");
+	str_to_oled_6x8(&data->oled, "WORLD");
 }
 
 void app_main(void)

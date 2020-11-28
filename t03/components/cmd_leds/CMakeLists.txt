@@ -1,5 +1,6 @@
 idf_component_register(
-        SRCS "structs.c"
+        SRCS "led_commands.c"
         INCLUDE_DIRS "."
         REQUIRES custom_error_functions
+        REQUIRES structs
 )

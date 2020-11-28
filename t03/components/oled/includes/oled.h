@@ -18,7 +18,7 @@
 void	display_pixels(t_oled *oled);
 void	put_pixel(uint8_t *pixels, int16_t x, uint16_t y, _Bool color);
 void	init_oled(t_oled *oled);
-void	str_to_oled(t_oled *oled, char *str);
+void	str_to_oled_6x8(t_oled *oled, char *str);
 void	clear_pixels(t_oled *oled);
 
 #endif

@@ -31,10 +31,10 @@ typedef struct  s_buffer
 
 t_command	*command_registration(char *name, char *sub,
 								   t_fnxptr *fx_arr);
-void		parse_uart_event(t_buffer *buf, t_buffer *line, t_command *cmds);
+void		parse_uart_event(t_buffer *buf, t_buffer *line, t_data *d);
 _Bool		parse_uart_buffer(t_buffer *buf);
 void		add_buffer_to_line(t_buffer *buf, t_buffer *line);
-void		parse_command_line(t_buffer *line, t_command *cmds);
+void		parse_command_line(t_buffer *line,  t_data *d);
 void		init_uart(void);
 void		read_from_uart(void *param);
 

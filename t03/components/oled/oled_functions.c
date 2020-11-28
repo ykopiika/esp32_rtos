@@ -48,7 +48,7 @@ static void char_to_pixels(uint8_t *pixels, int *pixels_index, int char_index)
     pixels[(*pixels_index)] = font6x8[char_index];
 }
 
-void str_to_oled(t_oled *oled, char *str)
+void str_to_oled_6x8(t_oled *oled, char *str)
 {
     if (!oled || !str)
         ESP_ERROR_CHECK(ESP_ERR_INVALID_ARG);
