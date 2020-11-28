@@ -50,10 +50,12 @@ void read_from_uart(void *param)
 	}
 }
 
-void init_uart(uart_config_t *uart)
+void init_uart(void)
 {
-	memset(uart, 0, sizeof(*uart));
-	*uart = (uart_config_t){
+	uart_config_t	uart;
+
+	memset(&uart, 0, sizeof(uart));
+	uart = (uart_config_t){
 			.baud_rate = 9600,
 			.data_bits = UART_DATA_8_BITS,
 			.parity = UART_PARITY_DISABLE,
@@ -61,7 +63,7 @@ void init_uart(uart_config_t *uart)
 			.flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
 	};
 	ESP_ERROR_CHECK(uart_driver_install(UART_NUM_1, 2048, 2048, 20, &uart0_queue, 0));
-	ESP_ERROR_CHECK(uart_param_config(UART_NUM_1, uart));
+	ESP_ERROR_CHECK(uart_param_config(UART_NUM_1, &uart));
 	ESP_ERROR_CHECK(uart_set_pin(UART_NUM_1, UART_TX_PIN, UART_RX_PIN,
 				 UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 	ESP_ERROR_CHECK(uart_pattern_queue_reset(UART_NUM_1, 20));

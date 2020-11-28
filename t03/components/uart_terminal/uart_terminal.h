@@ -53,7 +53,7 @@ void		parse_uart_event(t_buffer *buf, t_buffer *line, t_command *cmds);
 _Bool		parse_uart_buffer(t_buffer *buf);
 void		add_buffer_to_line(t_buffer *buf, t_buffer *line);
 void		parse_command_line(t_buffer *line, t_command *cmds);
-void		init_uart(uart_config_t *uart);
+void		init_uart(void);
 void		read_from_uart(void *param);
 
 #endif

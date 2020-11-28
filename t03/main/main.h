@@ -4,5 +4,6 @@
 #include "error_functions.h"
 #include "uart_terminal.h"
 #include "dht_11.h"
+#include "structs.h"
 
 #endif

@@ -31,10 +31,10 @@ static t_command	*init_commands(void)
 	return lst;
 }
 
-static void init_components(uart_config_t *uart_config, t_command **lst)
+static void init_components(t_command **lst)
 {
 	init_timer();
-	init_uart(uart_config);
+	init_uart();
 	dht11_init();
 	*lst = init_commands();
 	if (!*lst)
@@ -43,10 +43,13 @@ static void init_components(uart_config_t *uart_config, t_command **lst)
 
 void app_main(void)
 {
-	uart_config_t   uart_config;
+	t_data			*data;
 	t_command		*lst = NULL;
 
-	init_components(&uart_config, &lst);
+	if (!(data = (t_data*)malloc(sizeof(t_data))))
+		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
+
+	init_components(&lst);
 
 	xTaskCreate(dht_measuring_tsk, "dht_measuring",
 				2048, NULL, 10, NULL);
