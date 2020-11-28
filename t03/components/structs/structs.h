@@ -45,11 +45,20 @@ typedef struct		s_cmd_tmp
 }					t_cmd_tmp;
 //------------------------------------------------ for uart end
 
+typedef struct	s_led_tasks
+{
+	TaskHandle_t	led1_pulse;
+	TaskHandle_t	led2_pulse;
+	TaskHandle_t	led3_pulse;
+}				t_led_tasks;
+
 typedef struct	s_data
 {
 	t_command	*cmds;
 	t_oled		oled;
 	t_cmd_tmp	tmp;
+	t_led_tasks	leds;
+
 }				t_data;
 
 #endif

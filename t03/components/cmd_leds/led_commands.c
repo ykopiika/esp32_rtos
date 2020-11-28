@@ -1,55 +1,64 @@
 #include "led_commands.h"
 
-static TaskHandle_t	led1_pulse = NULL;
-static TaskHandle_t	led2_pulse = NULL;
-static TaskHandle_t	led3_pulse = NULL;
-
 static void hello_led(void *ptr)
 {
 	t_data		*d = (t_data*)ptr;
-	t_cmd_tmp	*tmp = &d->tmp;
+	t_cmd_tmp	tmp = d->tmp;
 	int			leds[3] = {GPIO_NUM_27, GPIO_NUM_26, GPIO_NUM_33};
 
-	ESP_ERROR_CHECK(gpio_set_direction(leds[tmp->led - 1], GPIO_MODE_OUTPUT));
+	ESP_ERROR_CHECK(gpio_set_direction(leds[tmp.led - 1], GPIO_MODE_OUTPUT));
 	while (1)
 	{
-		vTaskDelay(tmp->frq/portTICK_PERIOD_MS);
-		ESP_ERROR_CHECK(gpio_set_level(leds[tmp->led - 1], 1));
-		vTaskDelay(tmp->frq/portTICK_PERIOD_MS);
-		ESP_ERROR_CHECK(gpio_set_level(leds[tmp->led - 1], 0));
+		vTaskDelay(tmp.frq/portTICK_PERIOD_MS);
+		ESP_ERROR_CHECK(gpio_set_level(leds[tmp.led - 1], 1));
+		vTaskDelay(tmp.frq/portTICK_PERIOD_MS);
+		ESP_ERROR_CHECK(gpio_set_level(leds[tmp.led - 1], 0));
 	}
 }
 
-static void	check_is_run_pulse(int	nbr)
+static void	check_is_run_pulse(t_led_tasks *p, int	nbr)
 {
-	if (nbr == 1 && (led1_pulse != NULL))
+	if (nbr == 1 && (p->led1_pulse != NULL))
 	{
-		vTaskDelete(led1_pulse);
-		led1_pulse = NULL;
+		printf(" 1_pulse OFF\n");
+		vTaskDelete(p->led1_pulse);
+		p->led1_pulse = NULL;
 	}
-	if (nbr == 2 && (led2_pulse != NULL))
+	if (nbr == 2 && (p->led2_pulse != NULL))
 	{
-		vTaskDelete(led2_pulse);
-		led2_pulse = NULL;
+		printf(" 2_pulse OFF\n");
+		vTaskDelete(p->led2_pulse);
+		p->led2_pulse = NULL;
 	}
-	if (nbr == 3 && (led3_pulse != NULL))
+	if (nbr == 3 && (p->led3_pulse != NULL))
 	{
-		vTaskDelete(led3_pulse);
-		led3_pulse = NULL;
+		printf(" 3_pulse OFF\n");
+		vTaskDelete(p->led3_pulse);
+		p->led3_pulse = NULL;
 	}
 }
 
 static void	make_pulse(t_data *d)
 {
-	t_cmd_tmp	*tmp = &d->tmp;
+	t_cmd_tmp	tmp = d->tmp;
+	t_led_tasks *p = &d->leds;
 
-	check_is_run_pulse(tmp->led);
-	if (tmp->led == 1)
-		xTaskCreate(hello_led, "led", 2048, (void *)d, 5, &led1_pulse);
-	if (tmp->led == 2)
-		xTaskCreate(hello_led, "led", 2048, (void *)d, 5, &led2_pulse);
-	if (tmp->led == 3)
-		xTaskCreate(hello_led, "led", 2048, (void *)d, 5, &led3_pulse);
+	check_is_run_pulse(p, tmp.led);
+	if (tmp.led == 1)
+	{
+		printf("task 1_pulse ON\n");
+		xTaskCreate(hello_led, "led", 2048, (void *)d, 5, &p->led1_pulse);
+	}
+	if (tmp.led == 2)
+	{
+		printf("task 2_pulse ON\n");
+		xTaskCreate(hello_led, "led", 2048, (void *) d, 5, &p->led2_pulse);
+	}
+	if (tmp.led == 3)
+	{
+		printf("task 3_pulse ON\n");
+		xTaskCreate(hello_led, "led", 2048, (void *) d, 5, &p->led3_pulse);
+	}
 }
 
 int	led_on_off(void *ptr)
@@ -69,7 +78,7 @@ int	led_on_off(void *ptr)
 		nbr = atoi(tmp->str[i]);
 		if ((nbr < 1) || (nbr > 3))
 			return ST_NOT_VALID;
-		check_is_run_pulse(nbr);
+		check_is_run_pulse(&d->leds, nbr);
 		ESP_ERROR_CHECK(gpio_set_direction(leds[nbr - 1], GPIO_MODE_OUTPUT));
 		ESP_ERROR_CHECK(gpio_set_level(leds[nbr - 1], is_on));
 	}
