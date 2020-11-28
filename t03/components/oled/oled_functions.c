@@ -1,4 +1,4 @@
-#include "oled_init.h"
+#include "oled.h"
 #include "font6x8.h"
 
 void clear_pixels(t_oled *oled)

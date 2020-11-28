@@ -1,4 +1,4 @@
-#include "oled_init.h"
+#include "oled.h"
 
 static void set_commands(t_oled *oled)
 {

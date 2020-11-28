@@ -21,12 +21,14 @@ static t_command	*init_commands(void)
 
 	lst = command_registration("led", "on off pulse", fx_arr);
 	if (!lst)
-		return NULL;
+		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
 	fx_arr[0] = print_all_lists;
 	fx_arr[1] = NULL;
 	fx_arr[2] = NULL;
 	ptr = lst;
 	ptr->next = command_registration("dht", "log", fx_arr);
+	if (!ptr->next)
+		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
 //	ptr = ptr->next;
 	return lst;
 }
@@ -36,9 +38,11 @@ static void init_components(t_data *data)
 	init_timer();
 	init_uart();
 	dht11_init();
+	init_oled(&data->oled);
 	data->lst = init_commands();
-	if (!data->lst)
-		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
+	str_to_oled(&data->oled, "HELLO__HELLo");
+	clear_pixels(&data->oled);
+	str_to_oled(&data->oled, "WORLD");
 }
 
 void app_main(void)

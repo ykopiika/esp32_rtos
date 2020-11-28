@@ -4,5 +4,6 @@ idf_component_register(
     REQUIRES custom_error_functions
     REQUIRES uart_terminal
     REQUIRES dht11
+    REQUIRES oled
     REQUIRES structs
 )
