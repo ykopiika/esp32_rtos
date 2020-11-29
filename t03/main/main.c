@@ -36,7 +36,7 @@ static t_command	*init_commands(void)
 static void init_components(t_data *data)
 {
 	init_timer();
-	init_uart();
+	init_uart(data);
 	dht11_init();
 	init_oled(&data->oled);
 	data->cmds = init_commands();

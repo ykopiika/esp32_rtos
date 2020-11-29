@@ -1,7 +1,5 @@
 #include "uart_terminal.h"
 
-QueueHandle_t uart0_queue = NULL;
-
 static void full_line_check(t_buffer line, 	_Bool *is_printed_alarm)
 {
 	if (line.len == (MAX_LEN - 1) && !*is_printed_alarm)
@@ -31,7 +29,7 @@ void read_from_uart(void *param)
 	uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
 	while (on)
 	{
-		if (xQueueReceive(uart0_queue, (void *)&event, portMAX_DELAY))
+		if (xQueueReceive(d->uart0_queue, (void *)&event, portMAX_DELAY))
 		{
 			if (event.type == UART_DATA && event.size < MAX_LEN)
 			{
@@ -50,7 +48,7 @@ void read_from_uart(void *param)
 	}
 }
 
-void init_uart(void)
+void init_uart(t_data *data)
 {
 	uart_config_t	uart;
 
@@ -62,7 +60,7 @@ void init_uart(void)
 			.stop_bits = UART_STOP_BITS_1,
 			.flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
 	};
-	ESP_ERROR_CHECK(uart_driver_install(UART_NUM_1, 2048, 2048, 20, &uart0_queue, 0));
+	ESP_ERROR_CHECK(uart_driver_install(UART_NUM_1, 2048, 2048, 20, &data->uart0_queue, 0));
 	ESP_ERROR_CHECK(uart_param_config(UART_NUM_1, &uart));
 	ESP_ERROR_CHECK(uart_set_pin(UART_NUM_1, UART_TX_PIN, UART_RX_PIN,
 				 UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));

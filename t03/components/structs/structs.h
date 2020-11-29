@@ -75,6 +75,7 @@ typedef struct	s_led_tasks
 
 typedef struct	s_data
 {
+	QueueHandle_t	uart0_queue;
 	QueueHandle_t	dht_queue;
 	t_dht_lst		*head;
 	t_command		*cmds;
