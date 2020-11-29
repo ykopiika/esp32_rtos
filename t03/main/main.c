@@ -55,9 +55,9 @@ void app_main(void)
 
 	init_components(data);
 	xTaskCreate(dht_measuring_tsk, "dht_measuring",
-				2048, NULL, 10, NULL);
+				2048, (void *)data, 10, NULL);
     xTaskCreate(dht_write_to_lists_tsk, "dht_write_to_lists",
-                2048, NULL, 10, NULL);
+                2048, (void *)data, 10, NULL);
     xTaskCreate(read_from_uart, "read_uart",
                 4096, (void *)data, 5, NULL);
 }

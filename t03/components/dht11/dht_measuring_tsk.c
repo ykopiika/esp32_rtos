@@ -1,15 +1,13 @@
 #include "dht_11.h"
 
-static QueueHandle_t dht_queue = NULL;
-static t_dht_lst *head = NULL;
-
-void dht_measuring_tsk(void *param)
+void dht_measuring_tsk(void *ptr)
 {
+	t_data		*d = (t_data*)ptr;
 	t_dht dht;
 	_Bool is_on = true;
 
-	dht_queue = xQueueCreate(3, sizeof(t_dht));
-	if(dht_queue == NULL)
+	d->dht_queue = xQueueCreate(3, sizeof(t_dht));
+	if(d->dht_queue == NULL)
 		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
 
 	while (is_on)
@@ -17,14 +15,15 @@ void dht_measuring_tsk(void *param)
 		dht = (t_dht){0,0, 0};
 		get_value_dht11(&dht.tem, &dht.hum);
 		timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &dht.time);
-		xQueueSend( dht_queue, (void*)&dht, (TickType_t)0);
+		xQueueSend(d->dht_queue, (void*)&dht, (TickType_t)0);
 		vTaskDelay(5000 / portTICK_PERIOD_MS);
 	}
 }
 
 int print_all_lists(void *ptr)
 {
-	t_dht_lst	*lst = head;
+	t_data		*d = (t_data*)ptr;
+	t_dht_lst	*lst = d->head;
 	uint64_t	time = 0;
 	int			sec = 0;
 	int			min = 0;
@@ -51,25 +50,26 @@ int print_all_lists(void *ptr)
 	return ST_SUCCESS;
 }
 
-void dht_write_to_lists_tsk(void *param)
+void dht_write_to_lists_tsk(void *ptr)
 {
 	_Bool		is_on = true;
+	t_data		*d = (t_data*)ptr;
 	t_dht		dht;
 	int			count = 0;
 
 	while (is_on)
 	{
 		dht = (t_dht){0,0, 0};
-		if (dht_queue && xQueueReceive(dht_queue, (void*)&dht, portMAX_DELAY))
+		if (d->dht_queue && xQueueReceive(d->dht_queue, (void*)&dht, portMAX_DELAY))
 		{
 			if (count < MAX_DHT_LST)
 			{
-				head = add_dht_lst(head);
+				d->head = add_dht_lst(d->head);
 				count++;
 			}
 			else
-				head = last_lst_to_first(head);
-			head->dht = dht;
+				d->head = last_lst_to_first(d->head);
+			d->head->dht = dht;
 		}
 		vTaskDelay(10 / portTICK_PERIOD_MS);
 	}
