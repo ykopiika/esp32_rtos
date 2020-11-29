@@ -6,5 +6,6 @@
 #include "dht_11.h"
 #include "oled.h"
 #include "structs.h"
+#include "cstm_timer.h"
 
 #endif

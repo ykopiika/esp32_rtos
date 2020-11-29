@@ -7,7 +7,6 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 #include "driver/gpio.h"
-#include "driver/timer.h"
 #include "driver/uart.h"
 
 #include "error_functions.h"
@@ -17,8 +16,7 @@
 #define DH11_POWER_PIN 2
 
 #define MAX_DHT_LST 60
-#define TIMER_DIVIDER 80
-#define TIMER_SCALE (TIMER_BASE_CLK / TIMER_DIVIDER)
+
 
 void dht11_init(void);
 void get_value_dht11(uint8_t *temperature, uint8_t *humidity);

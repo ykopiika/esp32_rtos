@@ -6,4 +6,5 @@ idf_component_register(
     REQUIRES dht11
     REQUIRES oled
     REQUIRES structs
+    REQUIRES timer
 )

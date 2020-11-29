@@ -14,7 +14,7 @@ void dht_measuring_tsk(void *ptr)
 	{
 		dht = (t_dht){0,0, 0};
 		get_value_dht11(&dht.tem, &dht.hum);
-		timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &dht.time);
+		timer_get_counter_value(TIMER_GROUP_1, TIMER_0, &dht.time);
 		xQueueSend(d->dht_queue, (void*)&dht, (TickType_t)0);
 		vTaskDelay(5000 / portTICK_PERIOD_MS);
 	}
@@ -34,7 +34,7 @@ int print_all_lists(void *ptr)
 	while (lst)
 	{
 		bzero(&str, sizeof(str));
-		timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &time);
+		timer_get_counter_value(TIMER_GROUP_1, TIMER_0, &time);
 		sec = (int)((time - lst->dht.time) / TIMER_SCALE);
 		min = (int)(sec / 60);
 		sec = (int)(sec % 60);

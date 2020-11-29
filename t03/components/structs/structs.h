@@ -72,9 +72,22 @@ typedef struct	s_led_tasks
 }				t_led_tasks;
 //------------------------------------------------ leds end
 
+//------------------------------------------------ timer start
+#include "driver/timer.h"
+#define TIMER_DIVIDER 80
+#define TIMER_SCALE (TIMER_BASE_CLK / TIMER_DIVIDER)
+
+typedef struct	s_hms_time
+{
+	uint8_t		hrs;
+	uint8_t		min;
+	uint8_t		sec;
+}				t_hms_time;
+//------------------------------------------------ timer end
 
 typedef struct	s_data
 {
+	TaskHandle_t	oled_time_task;
 	QueueHandle_t	uart0_queue;
 	QueueHandle_t	dht_queue;
 	t_dht_lst		*head;

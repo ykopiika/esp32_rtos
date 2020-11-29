@@ -1,18 +1,5 @@
 #include "main.h"
 
-static void init_timer(void)
-{
-	timer_config_t config_1 = {
-			.alarm_en = TIMER_ALARM_DIS,
-			.counter_en = TIMER_START,
-			.intr_type = TIMER_INTR_LEVEL,
-			.counter_dir = TIMER_COUNT_UP,
-			.auto_reload = TIMER_AUTORELOAD_DIS,
-			.divider = TIMER_DIVIDER,
-	};
-	ESP_ERROR_CHECK(timer_init(TIMER_GROUP_0, TIMER_0, &config_1));
-}
-
 static t_command	*init_commands(void)
 {
 	t_command		*lst = NULL;
@@ -35,7 +22,7 @@ static t_command	*init_commands(void)
 
 static void init_components(t_data *data)
 {
-	init_timer();
+	init_timer(data);
 	init_uart(data);
 	dht11_init();
 	init_oled(&data->oled);
@@ -60,4 +47,6 @@ void app_main(void)
                 2048, (void *)data, 10, NULL);
     xTaskCreate(read_from_uart, "read_uart",
                 4096, (void *)data, 5, NULL);
+	xTaskCreate(time_to_oled, "time_to_oled",
+				4096, (void *) data, 1, &data->oled_time_task);
 }
