@@ -36,9 +36,6 @@ static void init_components(t_data *data)
 	dht11_init();
 	init_oled(&data->oled);
 	data->cmds = init_commands();
-	str_to_oled_6x8(&data->oled, "HELLO__HELLo", 3);
-	clear_pixels(&data->oled);
-	str_to_oled_6x8(&data->oled, "WORLD", 3);
 }
 
 void app_main(void)

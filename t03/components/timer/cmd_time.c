@@ -29,4 +29,3 @@ int	set_time(void *ptr)
 	timer_set_alarm_value(TIMER_GROUP_0, TIMER_0,  set_time + ( 1 * TIMER_SCALE));
 	return ST_SUCCESS;
 }
-
