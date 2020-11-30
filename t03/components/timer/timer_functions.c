@@ -12,7 +12,7 @@ void time_to_oled(void *ptr)
 	while (is_on)
 	{
 		xTaskNotifyWait(0xffffffff, 0, &time, portMAX_DELAY);
-		if(time == 86400)
+		if(time >= 86400)
 		{
 			t = (t_hms_time){0,0,0};
 			timer_set_counter_value(TIMER_GROUP_0, TIMER_0, 0);
@@ -28,11 +28,9 @@ void time_to_oled(void *ptr)
 //			t.sec = time - (3600 * t.hrs) - (t.sec * 60);
 		}
 		sprintf(str, "%02d:%02d:%02d", t.hrs, t.min, t.sec);
-//		str_to_oled_6x8(&d->oled, str);
 		str_to_oled_8x16(&d->oled, str, 0);
 	}
 }
-
 
 static void IRAM_ATTR timer_interrupt(void *ptr)
 {

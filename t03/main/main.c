@@ -9,11 +9,20 @@ static t_command	*init_commands(void)
 	lst = command_registration("led", "on off pulse", fx_arr);
 	if (!lst)
 		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
+
 	fx_arr[0] = print_all_lists;
 	fx_arr[1] = NULL;
 	fx_arr[2] = NULL;
 	ptr = lst;
 	ptr->next = command_registration("dht", "log", fx_arr);
+	if (!ptr->next)
+		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
+	ptr = ptr->next;
+
+	fx_arr[0] = set_time;
+	fx_arr[1] = NULL;
+	fx_arr[2] = NULL;
+	ptr->next = command_registration("set", "time", fx_arr);
 	if (!ptr->next)
 		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
 //	ptr = ptr->next;

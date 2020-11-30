@@ -1,6 +1,8 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+#include <ctype.h>
+
 //------------------------------------------------ oled start
 #include "driver/i2c.h"
 
