@@ -6,9 +6,10 @@ void time_to_oled(void *ptr)
 	char		str[12];
 	t_hms_time	t = (t_hms_time){0,0,0};
 	uint32_t	time = 0;
+	_Bool		is_on = true;
 
 	timer_start(TIMER_GROUP_0, TIMER_0);
-	while (true)
+	while (is_on)
 	{
 		xTaskNotifyWait(0xffffffff, 0, &time, portMAX_DELAY);
 		if(time == 86400)
@@ -25,10 +26,10 @@ void time_to_oled(void *ptr)
 //			t.hrs = (time) / 3600;
 //			t.min = (time - (3600 * t.hrs)) / 60;
 //			t.sec = time - (3600 * t.hrs) - (t.sec * 60);
-
 		}
 		sprintf(str, "%02d:%02d:%02d", t.hrs, t.min, t.sec);
-		str_to_oled_6x8(&d->oled, str);
+//		str_to_oled_6x8(&d->oled, str);
+		str_to_oled_8x16(&d->oled, str, 0);
 	}
 }
 
@@ -58,7 +59,6 @@ void init_timer(t_data *data)
 			.divider = TIMER_DIVIDER,
 	};
 	ESP_ERROR_CHECK(timer_init(TIMER_GROUP_1, TIMER_0, &timer_config_1));
-
 	timer_config_t timer_config_2 = {
 			.alarm_en = TIMER_ALARM_EN,
 			.counter_en = TIMER_PAUSE,
@@ -67,7 +67,6 @@ void init_timer(t_data *data)
 			.auto_reload = TIMER_AUTORELOAD_DIS,
 			.divider = TIMER_DIVIDER,
 	};
-
 	ESP_ERROR_CHECK(timer_init(TIMER_GROUP_0, 0, &timer_config_2));
 	ESP_ERROR_CHECK(timer_set_alarm_value(TIMER_GROUP_0, TIMER_0, 1 * TIMER_SCALE));
 	ESP_ERROR_CHECK(timer_enable_intr(TIMER_GROUP_0, TIMER_0));

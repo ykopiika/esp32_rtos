@@ -15,10 +15,17 @@
 #define SDA_PIN     GPIO_NUM_21
 #define SCL_PIN     GPIO_NUM_22
 
+typedef struct	s_point
+{
+	int x;
+	int y;
+}				t_point;
+
 void	display_pixels(t_oled *oled);
 void	put_pixel(uint8_t *pixels, int16_t x, uint16_t y, _Bool color);
 void	init_oled(t_oled *oled);
-void	str_to_oled_6x8(t_oled *oled, char *str);
+void	str_to_oled_6x8(t_oled *oled, char *str, int y);
+void	str_to_oled_8x16(t_oled *oled, char *str, int y);
 void	clear_pixels(t_oled *oled);
 
 #endif
