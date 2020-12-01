@@ -27,8 +27,7 @@ typedef struct  s_buffer
 	size_t      index;
 }               t_buffer;
 
-t_command	*command_registration(char *name, char *sub,
-								   t_fnxptr *fx_arr);
+t_command *command_registration(t_fnxptr *fx_arr, t_command *lst, char *name, char *sub);
 void		parse_uart_event(t_buffer *buf, t_buffer *line, t_data *d);
 _Bool		parse_uart_buffer(t_buffer *buf);
 void		add_buffer_to_line(t_buffer *buf, t_buffer *line);

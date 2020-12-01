@@ -3,28 +3,15 @@
 static t_command	*init_commands(void)
 {
 	t_command		*lst = NULL;
-	t_command		*ptr = NULL;
 
-	lst = command_registration("led", "on off pulse",
-				 	 (t_fnxptr[]){led_on_off, led_on_off, led_pulse});
-	if (!lst)
-		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
-	ptr = lst;
-	ptr->next = command_registration("dht", "log",
-							(t_fnxptr[]){print_all_lists});
-	if (!ptr->next)
-		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
-	ptr = ptr->next;
-	ptr->next = command_registration("set", "time",
-									 (t_fnxptr[]){set_time});
-	if (!ptr->next)
-		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
-	ptr = ptr->next;
-	ptr->next = command_registration("sound", "on off",
-									 (t_fnxptr[]){sound_on_off, sound_on_off});
-	if (!ptr->next)
-		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
-//	ptr = ptr->next;
+	lst = command_registration((t_fnxptr[]) {led_on_off, led_on_off, led_pulse},
+							lst, "led", "on off pulse");
+	lst = command_registration((t_fnxptr[]) {print_all_lists},
+							lst, "dht", "log");
+	lst = command_registration((t_fnxptr[]) {set_time},
+							lst, "set", "time");
+	lst = command_registration((t_fnxptr[]) {sound_on_off, sound_on_off},
+							lst,"sound","on off");
 	return lst;
 }
 

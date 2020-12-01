@@ -13,7 +13,7 @@ static t_subcmd 	*create_sub_node(char *name, t_fnxptr func)
 	return lst;
 }
 
-static t_command	*create_cmd_node(char *name)
+static t_command	*create_cmd_node(t_command *head, char *name)
 {
 	t_command *lst = NULL;
 
@@ -21,21 +21,23 @@ static t_command	*create_cmd_node(char *name)
 	if (!lst)
 		return NULL;
 	lst->name = strdup(name);
-	lst->next = NULL;
+	if(head)
+		lst->next = head;
+	else
+		lst->next = NULL;
 	lst->down = NULL;
 	return lst;
 }
 
-t_command	*command_registration(char *name, char *sub, t_fnxptr *fx_arr)
+t_command *command_registration(t_fnxptr *fx_arr, t_command *lst, char *name, char *sub)
 {
-	t_command	*lst = NULL;
 	t_subcmd 	*sublst = NULL;
 	char		**str = NULL;
 	int			size = 0;
 
-	lst = create_cmd_node(name);
+	lst = create_cmd_node(lst, name);
 	if (!lst)
-		return NULL;
+		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
 	str = ft_split_count(sub, ' ', &size);
 	if (!str)
 		err_print_exit(ERR_VAL_NULL, __FILE__, __func__, __LINE__);
