@@ -23,9 +23,6 @@ void time_to_oled(void *ptr)
 			t.hrs = time / 3600;
 			t.min = (time / 60) % 60;
 			t.sec = time % 60;
-//			t.hrs = (time) / 3600;
-//			t.min = (time - (3600 * t.hrs)) / 60;
-//			t.sec = time - (3600 * t.hrs) - (t.sec * 60);
 		}
 		sprintf(str, "%02d:%02d:%02d", t.hrs, t.min, t.sec);
 		str_to_oled_8x16(&d->oled, str, 3);

@@ -7,4 +7,5 @@ idf_component_register(
     REQUIRES oled
     REQUIRES structs
     REQUIRES timer
+    REQUIRES speaker
 )

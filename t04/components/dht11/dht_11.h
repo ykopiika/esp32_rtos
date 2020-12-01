@@ -17,7 +17,6 @@
 
 #define MAX_DHT_LST 60
 
-
 void dht11_init(void);
 void get_value_dht11(uint8_t *temperature, uint8_t *humidity);
 void dht_write_to_lists_tsk(void *param);
