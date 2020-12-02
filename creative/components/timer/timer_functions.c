@@ -25,7 +25,10 @@ void time_to_oled(void *ptr)
 			t.sec = time % 60;
 		}
 		sprintf(str, "%02d:%02d:%02d", t.hrs, t.min, t.sec);
-		str_to_oled_8x16(&d->oled, str, 1);
+		str_to_oled_8x16(&d->oled, str, 1); 				// print time
+		str_to_oled_8x16(&d->oled, d->dht_str, 4); 		// print tem hum
+		if ((d->alarm_time == (uint64_t)time) && d->is_alarm_on)
+			i2s_start(0);
 	}
 }
 
@@ -34,12 +37,12 @@ static void IRAM_ATTR timer_interrupt(void *ptr)
 	t_data		*d = (t_data*)ptr;
 
 	timer_spinlock_take(TIMER_GROUP_0);
-	uint64_t timer_val = timer_group_get_counter_value_in_isr(TIMER_GROUP_0, TIMER_0);
+	uint64_t cur_time = timer_group_get_counter_value_in_isr(TIMER_GROUP_0, TIMER_0);
 	timer_group_clr_intr_status_in_isr(TIMER_GROUP_0, 0);
-	uint64_t next_alarm = timer_val + ( 1 * TIMER_SCALE);
+	uint64_t next_alarm = cur_time + (1 * TIMER_SCALE);
 	timer_group_set_alarm_value_in_isr(TIMER_GROUP_0, TIMER_0, next_alarm);
 	timer_group_enable_alarm_in_isr(TIMER_GROUP_0, 0);
-	xTaskNotifyFromISR(d->oled_time_task, timer_val / 1000000, eSetValueWithOverwrite, 0);
+	xTaskNotifyFromISR(d->oled_time_task, cur_time / TIMER_SCALE, eSetValueWithOverwrite, 0);
 	timer_spinlock_give(TIMER_GROUP_0);
 }
 

@@ -8,8 +8,8 @@ static t_command	*init_commands(void)
 							lst, "led", "on off pulse");
 	lst = command_registration((t_fnxptr[]) {print_all_lists},
 							lst, "dht", "log");
-	lst = command_registration((t_fnxptr[]) {set_time},
-							lst, "set", "time");
+	lst = command_registration((t_fnxptr[]) {set_time, set_alarm},
+							lst, "set", "time alarm");
 	lst = command_registration((t_fnxptr[]) {sound_on_off, sound_on_off},
 							lst,"sound","on off");
 	return lst;

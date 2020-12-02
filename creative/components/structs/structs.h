@@ -2,6 +2,7 @@
 # define STRUCTS_H
 
 #include <ctype.h>
+#include "driver/i2s.h"
 
 //------------------------------------------------ oled start
 #include "driver/i2c.h"
@@ -97,6 +98,9 @@ typedef struct	s_data
 	t_oled			oled;
 	t_cmd_tmp		tmp;
 	t_led_tasks		leds;
+	char			dht_str[21];
+	_Bool 			is_alarm_on;
+	uint64_t		alarm_time;
 }				t_data;
 
 #endif

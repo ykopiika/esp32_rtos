@@ -5,4 +5,4 @@ set(CMAKE_FIND_ROOT_PATH ~/.espressif/tools/xtensa-esp32-elf/esp-2020r2-8.2.0/xt
 set(CMAKE_C_COMPILER ~/.espressif/tools/xtensa-esp32-elf/esp-2020r2-8.2.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc)
 set(CMAKE_CXX_COMPILER ~/.espressif/tools/xtensa-esp32-elf/esp-2020r2-8.2.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-g++)
 set(CMAKE_ASM_COMPILER ~/.espressif/tools/xtensa-esp32-elf/esp-2020r2-8.2.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc)
-project(Make_some_noise)
+project(creative)

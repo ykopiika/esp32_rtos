@@ -7,5 +7,6 @@
 void	init_timer(t_data *data);
 void	time_to_oled(void *ptr);
 int		set_time(void *ptr);
+int		set_alarm(void *ptr);
 
 #endif

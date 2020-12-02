@@ -11,6 +11,7 @@
 
 #include "error_functions.h"
 #include "structs.h"
+#include "oled.h"
 
 #define DH11_DATA_PIN 4
 #define DH11_POWER_PIN 2

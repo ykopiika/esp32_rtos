@@ -5,4 +5,5 @@ idf_component_register(
         INCLUDE_DIRS "."
         REQUIRES custom_error_functions
         REQUIRES structs
+        REQUIRES oled
 )

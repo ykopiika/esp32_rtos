@@ -72,6 +72,7 @@ void dht_write_to_lists_tsk(void *ptr)
 			else
 				d->head = last_lst_to_first(d->head);
 			d->head->dht = dht;
+			sprintf(d->dht_str, "Tem %02dC Hum %02d%%", dht.tem, dht.hum);
 		}
 		vTaskDelay(10 / portTICK_PERIOD_MS);
 	}
