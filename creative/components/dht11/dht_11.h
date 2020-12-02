@@ -17,12 +17,12 @@
 
 #define MAX_DHT_LST 60
 
-void dht11_init(void);
-void get_value_dht11(uint8_t *temperature, uint8_t *humidity);
-void dht_write_to_lists_tsk(void *param);
-void dht_measuring_tsk(void *param);
-t_dht_lst *add_dht_lst(t_dht_lst *head);
-t_dht_lst *last_lst_to_first(t_dht_lst *head);
-int print_all_lists(void *ptr);
+int		print_all_lists(void *ptr);
+void	dht11_init(void);
+void	dht_write_to_lists_tsk(void *param);
+void	dht_measuring_tsk(void *param);
+_Bool	get_value_dht11(uint8_t *temperature, uint8_t *humidity);
+t_dht_lst	*add_dht_lst(t_dht_lst *head);
+t_dht_lst	*last_lst_to_first(t_dht_lst *head);
 
 #endif

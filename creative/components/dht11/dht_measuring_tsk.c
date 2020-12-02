@@ -13,7 +13,9 @@ void dht_measuring_tsk(void *ptr)
 	while (is_on)
 	{
 		dht = (t_dht){0,0, 0};
-		get_value_dht11(&dht.tem, &dht.hum);
+		if(!get_value_dht11(&dht.tem, &dht.hum))
+			if (d->head)
+				dht = d->head->dht;
 		timer_get_counter_value(TIMER_GROUP_1, TIMER_0, &dht.time);
 		xQueueSend(d->dht_queue, (void*)&dht, (TickType_t)0);
 		vTaskDelay(5000 / portTICK_PERIOD_MS);

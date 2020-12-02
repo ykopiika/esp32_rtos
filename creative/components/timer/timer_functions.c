@@ -25,7 +25,7 @@ void time_to_oled(void *ptr)
 			t.sec = time % 60;
 		}
 		sprintf(str, "%02d:%02d:%02d", t.hrs, t.min, t.sec);
-		str_to_oled_8x16(&d->oled, str, 3);
+		str_to_oled_8x16(&d->oled, str, 1);
 	}
 }
 

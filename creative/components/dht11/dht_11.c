@@ -3,7 +3,8 @@
 static int count_status(int time, _Bool status)
 {
     int count = 0;
-    while (gpio_get_level(DH11_DATA_PIN) == status) {
+    while (gpio_get_level(DH11_DATA_PIN) == status)
+    {
         if (count > time)
             return -1;
         ets_delay_us(1);
@@ -49,7 +50,8 @@ static void set_bit(int result, uint8_t *arr, int *j, int i)
 static _Bool is_correct_value(uint8_t *arr)
 {
     int result = 0;
-    for (int i = 1, j = 0; i < 41; i++) {
+    for (int i = 1, j = 0; i < 41; i++)
+    {
         if (count_status(50, 0) == -1)
             return false_and_printf(__func__ , __LINE__,
                                     "STAGE_3 failed\n");
@@ -73,20 +75,22 @@ void dht11_init(void)
     ets_delay_us(2000000);
 }
 
-void get_value_dht11(uint8_t *temperature, uint8_t *humidity)
+_Bool get_value_dht11(uint8_t *temperature, uint8_t *humidity)
 {
     uint8_t arr[5];
-    if (!temperature || !humidity) {
+    if (!temperature || !humidity)
+    {
         printf("Temperature and/or Humidity pointers is NULL!\n");
-        return;
+        return false;
     }
     bzero(&arr, sizeof(arr));
     *temperature = 0;
     *humidity = 0;
     if (is_correct_call_to_dht11() == false)
-        return;
+        return false;
     if (is_correct_value(arr) == false)
-        return;
+        return false;
     *humidity = arr[0];
     *temperature = arr[2];
+	return true;
 }
