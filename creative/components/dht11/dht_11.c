@@ -50,6 +50,7 @@ static void set_bit(int result, uint8_t *arr, int *j, int i)
 static _Bool is_correct_value(uint8_t *arr)
 {
     int result = 0;
+
     for (int i = 1, j = 0; i < 41; i++)
     {
         if (count_status(50, 0) == -1)
@@ -78,6 +79,7 @@ void dht11_init(void)
 _Bool get_value_dht11(uint8_t *temperature, uint8_t *humidity)
 {
     uint8_t arr[5];
+
     if (!temperature || !humidity)
     {
         printf("Temperature and/or Humidity pointers is NULL!\n");

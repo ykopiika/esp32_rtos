@@ -15,6 +15,30 @@ static void full_line_check(t_buffer line, 	_Bool *is_printed_alarm)
 		*is_printed_alarm = false;
 }
 
+static void uart_response(t_data *d,
+						  t_buffer *buf,
+						  t_buffer *line,
+						  _Bool *is_printed_alarm)
+{
+	buf->len = strlen((char*)buf->data);
+	if (parse_uart_buffer(buf))
+	{
+		printf("true\n");
+		add_buffer_to_line(buf, line);
+	}
+	else
+	{
+		printf("false\n");
+		parse_uart_event(buf, line, d);
+	}
+	full_line_check(*line, is_printed_alarm);
+	printf("buf  |%d|%s| - ", buf->len, (char *)buf->data);
+	for (int i = 0; i < buf->len; ++i)
+		printf("%d  ", buf->data[i]);
+	printf("\n");
+	printf("line |%d|%s| - |%d|\n\n", line->len, line->data, line->data[0]);
+}
+
 void read_from_uart(void *param)
 {
 	t_data			*d = (t_data*)param;
@@ -34,23 +58,7 @@ void read_from_uart(void *param)
 			if (event.type == UART_DATA && event.size < MAX_LEN)
 			{
 				uart_read_bytes(UART_NUM_1, buf.data, event.size, 0);
-				buf.len = strlen((char*)buf.data);
-				if (parse_uart_buffer(&buf))
-				{
-					printf("true\n");
-					add_buffer_to_line(&buf, &line);
-				}
-				else
-				{
-					printf("false\n");
-					parse_uart_event(&buf, &line, d);
-				}
-				full_line_check(line, &is_printed_alarm);
-				printf("buf  |%d|%s| - ", buf.len, (char *)buf.data);
-				for (int i = 0; i < buf.len; ++i)
-					printf("%d  ", buf.data[i]);
-				printf("\n");
-				printf("line |%d|%s| - |%d|\n\n", line.len, line.data, line.data[0]);
+				uart_response(d, &buf, &line, &is_printed_alarm);
 			}
 			memset(&buf, 0, sizeof(buf));
 			ESP_ERROR_CHECK(uart_flush(UART_NUM_1));
