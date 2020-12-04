@@ -88,6 +88,15 @@ typedef struct	s_hms_time
 }				t_hms_time;
 //------------------------------------------------ timer end
 
+#define MAX_LEN 40
+
+typedef struct  s_buffer
+{
+	uint8_t     data[MAX_LEN];
+	size_t      len;
+	size_t      index;
+}               t_buffer;
+
 typedef struct	s_data
 {
 	TaskHandle_t	oled_time_task;
@@ -99,8 +108,12 @@ typedef struct	s_data
 	t_cmd_tmp		tmp;
 	t_led_tasks		leds;
 	char			dht_str[21];
+
 	_Bool 			is_alarm_on;
 	uint64_t		alarm_time;
+
+	t_buffer		buf;
+	t_buffer		line;
 }				t_data;
 
 #endif

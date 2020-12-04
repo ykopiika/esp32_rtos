@@ -16,40 +16,41 @@ static void full_line_check(t_buffer line, 	_Bool *is_printed_alarm)
 }
 
 static void uart_response(t_data *d,
-						  t_buffer *buf,
-						  t_buffer *line,
 						  _Bool *is_printed_alarm)
 {
+	t_buffer        *buf = &d->buf;
+	t_buffer        *line = &d->line;
+
 	buf->len = strlen((char*)buf->data);
 	if (parse_uart_buffer(buf))
 	{
-		printf("true\n");
+//		printf("true\n");
 		add_buffer_to_line(buf, line);
 	}
 	else
 	{
-		printf("false\n");
+//		printf("false\n");
 		parse_uart_event(buf, line, d);
 	}
 	full_line_check(*line, is_printed_alarm);
-	printf("buf  |%d|%s| - ", buf->len, (char *)buf->data);
-	for (int i = 0; i < buf->len; ++i)
-		printf("%d  ", buf->data[i]);
-	printf("\n");
-	printf("line |%d|%s| - |%d|\n\n", line->len, line->data, line->data[0]);
+//	printf("buf  |%d|%s| - ", buf->len, (char *)buf->data);
+//	for (int i = 0; i < buf->len; ++i)
+//		printf("%d  ", buf->data[i]);
+//	printf("\n");
+//	printf("line |%d|%s| - |%d|\n\n", line->len, line->data, line->data[0]);
 }
 
 void read_from_uart(void *param)
 {
 	t_data			*d = (t_data*)param;
-	t_buffer        buf;
-	t_buffer        line;
+	t_buffer        *buf = &d->buf;
+	t_buffer        *line = &d->line;
 	uart_event_t    event;
-	_Bool on = true;
-	_Bool is_printed_alarm = false;
+	_Bool			on = true;
+	_Bool			is_printed_alarm = false;
 
-	memset(&buf, 0, sizeof(buf));
-	memset(&line, 0, sizeof(line));
+	memset(buf, 0, sizeof(*buf));
+	memset(line, 0, sizeof(*line));
 	uart_write_bytes(UART_NUM_1, "\r\n$ ", 4);
 	while (on)
 	{
@@ -57,10 +58,10 @@ void read_from_uart(void *param)
 		{
 			if (event.type == UART_DATA && event.size < MAX_LEN)
 			{
-				uart_read_bytes(UART_NUM_1, buf.data, event.size, 0);
-				uart_response(d, &buf, &line, &is_printed_alarm);
+				uart_read_bytes(UART_NUM_1, buf->data, event.size, 0);
+				uart_response(d, &is_printed_alarm);
 			}
-			memset(&buf, 0, sizeof(buf));
+			memset(buf, 0, sizeof(*buf));
 			ESP_ERROR_CHECK(uart_flush(UART_NUM_1));
 		}
 		vTaskDelay(10 / portTICK_PERIOD_MS);

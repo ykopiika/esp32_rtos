@@ -17,7 +17,6 @@
 
 void	init_i2s_speaker(void);
 int		sound_on_off(void *ptr);
-void	make_noise(void *ptr);
 void	make_bip(void);
 
 #endif

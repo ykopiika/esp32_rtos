@@ -17,15 +17,7 @@
 
 #define UART_TX_PIN 17
 #define UART_RX_PIN 16
-#define MAX_LEN 40
-#define CMD_LEN 3
-
-typedef struct  s_buffer
-{
-	uint8_t     data[MAX_LEN];
-	size_t      len;
-	size_t      index;
-}               t_buffer;
+//#define CMD_LEN 3
 
 t_command *command_registration(t_fnxptr *fx_arr, t_command *lst, char *name, char *sub);
 void		parse_uart_event(t_buffer *buf, t_buffer *line, t_data *d);

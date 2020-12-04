@@ -89,7 +89,6 @@ void str_to_oled_8x16(t_oled *oled, char *str, int y)
     t_point p = {0, y};
     p.x = (calc > 0) ? (calc / 2) : 0;
 	print_chars_8x16(oled, p, str, len, 0);
-//	p.x = (calc > 0) ? (calc / 2) : 0;
 	p.y++;
 	print_chars_8x16(oled, p, str, len, 8);
 	display_pixels(oled);

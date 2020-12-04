@@ -42,7 +42,7 @@ void app_main(void)
                 4096, (void *)data, 3, NULL);
 	xTaskCreate(time_to_oled, "time_to_oled",
 				2048, (void *) data, 1, &data->oled_time_task);
-	xTaskCreate(make_noise, "make_noise",
-			 	1024, NULL, 4, NULL);
+//	xTaskCreate(make_noise, "make_noise",
+//			 	1024, NULL, 4, NULL);
 }
 
